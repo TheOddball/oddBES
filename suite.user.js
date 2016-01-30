@@ -3,13 +3,13 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.5.1a
+// @version      1.5.1.1a
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
 // @require      https://caresx.github.io/backpacktf-enhancement-suite/deps.js
-// @downloadURL  http://oddball.tf/img/oddsBES.user.js
-// @updateURL    http://oddball.tf/img/oddsBES.meta.js
+// @downloadURL  https://theoddball.github.io/oddBES/suite.user.js
+// @updateURL    https://theoddball.github.io/oddBES/suite.meta.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -2864,7 +2864,6 @@ function iconinf(item, particle, margins) {
         if (typeof margins === 'number') o.lmargin = o.rmargin = margins;
         else {
             o.lmargin = margins[0];
-            o.lmargin = margins[2];
 			o.rmargin = margins[1];
         }
     } else {
@@ -2889,7 +2888,7 @@ var users = {
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-	8048498731: {badges: [2], color: '#ff66cb'},
+	8048498731: {badges: [2, 0], color: '#ff66cb'},
 	};
 
 function renderUserBadges(badges) {
@@ -2931,7 +2930,7 @@ function modifyBelts(handle) {
         if (!u || !u.icon) return;
         icon = iconinf.apply(null, u.icon);
         belt = this.querySelector('.label-belt');
-
+        belt = this.querySelector('.belt');
         if (!belt) return;
 
         padding = icon.padding || 14;
@@ -2939,7 +2938,8 @@ function modifyBelts(handle) {
         if (icon.lmargin) lmargin = icon.lmargin;
         if (icon.rmargin) rmargin = icon.rmargin;
 
-        belt.innerHTML = '<span style="background-image:' + icon.img + ';background-size:contain;background-repeat:no-repeat;padding:' + padding + 'px;margin-left:' + lmargin + 'px;margin-right:' + rmargin + 'px;color: transparent;">★</span>';
+        belt.innerHTML = '<span style="background-image:' + icon.img + ';background-size:contain;background-repeat:no-repeat;padding:' + padding + 'px;margin-left:' + lmargin + 'px;margin-right:' + rmargin + 'px;text-shadow:none;color: transparent;">★</span>';
+
     });
 }
 
