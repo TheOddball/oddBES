@@ -1,15 +1,15 @@
 /*!
 // ==UserScript==
 // @name         backpack.tf enhancement suite
-// @namespace    http://steamcommunity.com/id/caresx/
-// @author       cares
-// @version      1.5.0.1
+// @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
+// @author       cares with edits by The Oddball
+// @version      1.5.1a
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
 // @require      https://caresx.github.io/backpacktf-enhancement-suite/deps.js
-// @downloadURL  https://caresx.github.io/backpacktf-enhancement-suite/suite.user.js
-// @updateURL    https://caresx.github.io/backpacktf-enhancement-suite/suite.meta.js
+// @downloadURL  http://oddball.tf/img/oddsBES.user.js
+// @updateURL    http://oddball.tf/img/oddsBES.meta.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
@@ -20,7 +20,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 /*!
  * backpack.tf Enhancement Suite - enhancing your backpack.tf experience
- * Made by cares <http://steamcommunity.com/id/caresx>
+ * Made by cares <http://steamcommunity.com/id/caresx> and The Oddball <http://steamcommunity.com/id/theoddball>
  *
  * Post feedback + view instuctions:
    http://forums.backpack.tf/index.php?/topic/36130-backpacktf-enhancement-suite/
@@ -1805,7 +1805,6 @@ function listItem(id, value, sample, then) {
         item.css('opacity', 0.6).data('can-sell', 0)
             .find('.tag.bottom-right').html(ok ? '<i class="fa fa-tag"></i> ' + qlFormatValue(value, false) : '<i class="fa fa-exclamation-circle" style="color:red"></i>');
 
-        if (!ok && !Script.window.confirm('Error occured, continue listing?')) return;
         if (then) then();
     });
 }
@@ -2846,7 +2845,14 @@ var BadgeSupporter = {
     icon: 'fa-trophy',
 };
 
-var badgemap = [BadgeSelfMade, BadgeSupporter];
+var BadgeGwen = {
+    title: 'Editor',
+    content: 'I worked on BES for cares!',
+    style: 'border-color:#ff1ab1;background-color:#ff66cb;box-shadow:inset 0 0 0px #ff1ab1;',
+    icon: 'fa-code'
+};
+
+var badgemap = [BadgeSelfMade, BadgeSupporter, BadgeGwen];
 var ID_PREFIX = "7656119";
 
 function iconinf(item, particle, margins) {
@@ -2858,7 +2864,8 @@ function iconinf(item, particle, margins) {
         if (typeof margins === 'number') o.lmargin = o.rmargin = margins;
         else {
             o.lmargin = margins[0];
-            o.rmargin = margins[1];
+            o.lmargin = margins[2];
+			o.rmargin = margins[1];
         }
     } else {
         o.lmargin = o.rmargin = -4;
@@ -2874,17 +2881,16 @@ var users = {
     8107654171: {badges: [1], color: '#0b1c37', icon: ['xms2013_demo_plaid_hat.152c6db9806406bd10fd82bd518de3c89ccb6fad', 58, [-7, -8]]},
     8067575136: {badges: [1], icon: ['xms_pyro_parka.de5a5f80e74f428204a4f4a7d094612173adbe50', 13, [-9, -12]]},
     8044195191: {badges: [1], icon: ['fez.ee87ed452e089760f1c9019526d22fcde9ec2450', 43, [-2, -4]]},
-
     8056198948: {badges: [1], icon: ['jul13_soldier_fedora.ec4971943386c378e174786b6302d058e4e8627a', 10, [-5, -6]]},
     8165677507: {badges: [1], color: '#FF6000', icon: ['cc_summer2015_potassium_bonnett.3849871e2fe2b96fb41209de62defa59b136f038', 38, [-5, -6]]},
-
     8067795713: {badges: [1], color: '#000066', icon: ['soldier_warpig.e183081f85b5b2e3e9da1217481685613a3fed1f', 14, [-10, -11]]},
     7980709148: {badges: [1], color: '#A41408'},
     8081201910: {badges: [1], color: '#CC0000', icon: ['hat_first_nr.e7cb3f5de1158e924aede8c3eeda31e920315f9a', 64, [-10, -11]]},
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-};
+	8048498731: {badges: [2], color: '#ff66cb'},
+	};
 
 function renderUserBadges(badges) {
     var html = '';
