@@ -1,5 +1,5 @@
 ### v1.5.1
-Fixed quicklisting
+Fixed quicklisting.
 Now done by The Oddball and Julia!
 
 ### v1.5.0
