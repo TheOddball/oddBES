@@ -1,3 +1,7 @@
+### v1.5.1
+Fixed quicklisting
+Now done by The Oddball and Julia!
+
 ### v1.5.0
 Added auto peek classifieds option.
 Added a bolt icon to Automatic listings in Classifieds peek.
