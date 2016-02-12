@@ -1,3 +1,7 @@
+### v1.6
+Fixed quicklisting (100% done!)
+Fixed dupe check
+
 ### v1.5.1
 Fixed quicklisting.
 

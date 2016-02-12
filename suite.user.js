@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.5.1.2
+// @version      1.6
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -799,7 +799,7 @@ function addDupeCheck() {
 
     function checkDuped(oid, btn) {
         $.get("/item/" + oid, function (html) {
-            var dupe = /Refer to entries in the item history <strong>where the item ID is not chronological/.test(html);
+            var dupe = /At least two versions of this item exist. Items with non-chronological IDs are highlighted in red./.test(html);
             window.dupeCache[oid] = dupe;
             window.addDupeWarn(btn, dupe);
         });
@@ -835,7 +835,7 @@ function addDupeCheck() {
 function bpDupeCheck() {
     var items = [];
 
-    if (Page.bp().selectionMode) {
+    if (inventory.selectionMode) {
         return alert("Select the items you want to dupe-check first.");
     }
 
@@ -1579,9 +1579,9 @@ function applyTagsToItems(items) {
     });
 
     // Clear price cache for updateValues()
-    if (clear && Page.bp()) {
+    if (clear && inventory) {
         Script.exec('$(".item").removeData("price");');
-        Page.bp().updateValues();
+        inventory.updateValues();
     }
 
     if (tooltips) {
@@ -1648,7 +1648,7 @@ function addQuicklistPanelButtons() {
 }
 
 function updateSelectQuicklist() {
-    $("#bp-custom-select-ql").toggleClass("disabled", !Page.bp().selectionMode);
+    $("#bp-custom-select-ql").toggleClass("disabled", !inventory.selectionMode);
 }
 
 function onActionButtonClick() {
@@ -1750,7 +1750,7 @@ function addEventListeners() {
     $(document).on('click', '.ql-action-button', onActionButtonClick);
 
     $("#bp-custom-select-ql").click(function () {
-        if (Page.bp().selectionMode) {
+        if (inventory.selectionMode) {
             selectQuicklist();
         }
     });
@@ -1763,8 +1763,9 @@ function listSelection(value) {
         items = [],
         at = 0;
 
-    _clearSelection();
-    Page.bp().updateClearSelectionState();
+		inventory.clearSelection();
+		updateSelectQuicklist();
+    inventory.updateClearSelectionState();
 
     selection.each(function () {
         var $this = $(this);
@@ -1799,7 +1800,7 @@ function listItem(id, value, sample, then) {
 
     // id: current item id
     $.post("http://backpack.tf/classifieds/sell/" + id, payload, function (page) {
-        var ok = /<i class="fa fa-check-circle"><\/i> Your listing was posted successfully. <\/div>/.test(page),
+        var ok = /<div class="panel-heading">Sell Orders<\/div>/.test(page),
             item = $('[data-id="' + id + '"]');
 
         item.css('opacity', 0.6).data('can-sell', 0)
@@ -1869,13 +1870,13 @@ function modifyQuicklists() {
 }
 
 function addSelectPage() {
-    var bp = Page.bp();
+    var bp = inventory;
     function selectItems(items) {
-        bp.selectionMode = true;
+        inventory.selectionMode = true;
         Page.selectItem(items);
 
-        bp.updateClearSelectionState();
-        bp.updateValues();
+        inventory.updateClearSelectionState();
+        inventory.updateValues();
         updateSelectQuicklist();
     }
 
@@ -1884,12 +1885,13 @@ function addSelectPage() {
 
         if (!pageitems.length) return;
 
-        if (bp.selectionMode) {
+        if (inventory.selectionMode) {
             if (pageitems.length === pageitems.not('.unselected').length) { // all == selected
                 Page.unselectItem(pageitems);
 
                 if ($('.item:not(.unselected)').length === 0) {
-                    _clearSelection();
+                        inventory.clearSelection();
+						updateSelectQuicklist();
                     return;
                 }
             } else {
@@ -1900,11 +1902,6 @@ function addSelectPage() {
             selectItems(pageitems);
         }
     });
-}
-
-function _clearSelection() {
-    Page.bp().clearSelection();
-    updateSelectQuicklist();
 }
 
 function addSelectPageButtons() {
@@ -1926,7 +1923,7 @@ function addSelectPageButtons() {
 }
 
 function addHooks() {
-    $('#clear-selection').click(function () {
+    $('clear-selection').click(function () {
         if (!$(this).hasClass('disabled')) {
             updateSelectQuicklist();
         }
@@ -1941,7 +1938,7 @@ function addHooks() {
 
 function addItemShiftClick() {
     var $i = $('.item:not(.spacer)'),
-        bp = Page.bp(),
+        bp = inventory,
         $last, $select;
 
     Script.exec("$('.item:not(.spacer)').off('click');");
@@ -1951,7 +1948,7 @@ function addItemShiftClick() {
 
         updateSelectQuicklist();
 
-        if (!bp.selectionMode) {
+        if (!inventory.selectionMode) {
             $last = null;
             if ($this.siblings('.popover').length === 0) {
                 // Touchscreen compatibility.
@@ -1959,12 +1956,12 @@ function addItemShiftClick() {
                 return;
             }
 
-            bp.selectionMode = true;
+            inventory.selectionMode = true;
             Page.unselectItem($('.item'));
             Page.selectItem($this);
             $last = $this;
 
-            bp.updateClearSelectionState();
+            inventory.updateClearSelectionState();
         } else {
             if ($this.hasClass('unselected')) {
                 if (e.shiftKey && $last && $last.not('.unselected') && ($lidx = $i.index($last)) !== -1) {
@@ -1988,20 +1985,20 @@ function addItemShiftClick() {
                 Page.unselectItem($this);
 
                 if ($('.item:not(.unselected)').length === 0) {
-                    bp.selectionMode = false;
+                    inventory.selectionMode = false;
                     Page.selectItem($('.item'));
-                    bp.updateClearSelectionState();
+                    inventory.updateClearSelectionState();
                 }
             }
         }
 
-        $('#clear-selection').click(function () {
+        $('clear-selection').click(function () {
             if (!$(this).hasClass('disabled')) {
-                bp.clearSelection();
+                inventory.clearSelection();
             }
         });
 
-        bp.updateValues();
+        inventory.updateValues();
     });
 }
 
@@ -2845,14 +2842,14 @@ var BadgeSupporter = {
     icon: 'fa-trophy',
 };
 
-var BadgeGwen = {
-    title: 'Editor',
-    content: 'I worked on BES for cares!',
+var BadgeHelper = {
+    title: 'Collaborator',
+    content: 'I helped create Enhancement Suite!',
     style: 'border-color:#ff1ab1;background-color:#ff66cb;box-shadow:inset 0 0 0px #ff1ab1;',
     icon: 'fa-code'
 };
 
-var badgemap = [BadgeSelfMade, BadgeSupporter, BadgeGwen];
+var badgemap = [BadgeSelfMade, BadgeSupporter, BadgeHelper];
 var ID_PREFIX = "7656119";
 
 function iconinf(item, particle, margins) {
@@ -2888,8 +2885,8 @@ var users = {
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-    8048498731: {badges: [2, 0], color: '#ff66cb', icon: ['pcg_hat_engineer.13ee1cad574b26c2b7d561a799f8edfaca9ac18c', 68, [-5, -6]]},
-    8080179568: {badges: [2, 0], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]]},
+    8048498731: {badges: [2, 0], icon: ['pcg_hat_engineer.13ee1cad574b26c2b7d561a799f8edfaca9ac18c', 68, [-5, -6]]},
+    8080179568: {badges: [2], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]]},
 	};
 
 function renderUserBadges(badges) {
