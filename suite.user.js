@@ -3,11 +3,12 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6
+// @version      1.6.1
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
 // @require      https://caresx.github.io/backpacktf-enhancement-suite/deps.js
+// @downloadURL  https://theoddball.github.io/oddBES/suite.user.js
 // @downloadURL  https://theoddball.github.io/oddBES/suite.user.js
 // @updateURL    https://theoddball.github.io/oddBES/suite.meta.js
 // @grant        GM_xmlhttpRequest
@@ -834,10 +835,6 @@ function addDupeCheck() {
 
 function bpDupeCheck() {
     var items = [];
-
-    if (inventory.selectionMode) {
-        return alert("Select the items you want to dupe-check first.");
-    }
 
     $('.item:not(.spacer,.unselected):visible').each(function () {
         var $this = $(this),
