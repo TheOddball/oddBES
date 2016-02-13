@@ -1,3 +1,7 @@
+### v1.6.1 & v1.6.2
+Fixed select page
+Fixed updating values (Thanks Zapperzz for reporting this!)
+
 ### v1.6
 Fixed quicklisting (100% done!)
 Fixed dupe check
