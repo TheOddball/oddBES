@@ -3,12 +3,11 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.2
+// @version      1.6.2a
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
 // @require      https://caresx.github.io/backpacktf-enhancement-suite/deps.js
-// @downloadURL  https://theoddball.github.io/oddBES/suite.user.js
 // @downloadURL  https://theoddball.github.io/oddBES/suite.user.js
 // @updateURL    https://theoddball.github.io/oddBES/suite.meta.js
 // @grant        GM_xmlhttpRequest
@@ -1762,7 +1761,7 @@ function listSelection(value) {
 
 		clearSelection();
 		updateSelectQuicklist();
-    inventory.updateClearSelectionState();
+		updateClearSelectionState();
 
     selection.each(function () {
         var $this = $(this);
