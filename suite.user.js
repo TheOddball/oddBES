@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.2.1
+// @version      1.6.2.2
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -14,6 +14,7 @@
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
+// @require      https://gist.githubusercontent.com/Fiskie/b3eb298e4af8734d63ec/raw/a89780567dcb5b3d1a60b03d90cf9b4731978a72/inventory.js
 // ==/UserScript==
 */
 
@@ -1834,14 +1835,16 @@ function copyButtonValues(value, elem) {
     }
 }
 
-inventory.clearSelection = function() {
-	 if (inventory.selectionMode) {
-        selectItem($('.item'));
-        disableSelectionMode();
-		updateValues();
-		updateClearSelectionState();
-    }
-};
+if (Page.isBackpack()) {
+    inventory.clearSelection = function() {
+        if (inventory.selectionMode) {
+            selectItem($('.item'));
+            disableSelectionMode();
+            updateValues();
+            updateClearSelectionState();
+        }
+    };
+}
 
 function disableSelectionMode() {
     inventory.selectionMode = false;
