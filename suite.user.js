@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.2.2
+// @version      1.6.2.3
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -1661,13 +1661,13 @@ function onActionButtonClick() {
 }
 
 function findSample() {
-    return $('[data-listing-offers-url]').first();
+    return $('[data-listing_offers_url]').first();
 }
 
 function currentSelection() {
     return $('.item:not(.spacer,.unselected,.ql-cloned):visible').filter(function () {
         var item = $(this);
-        return item.data("can-sell") && !item.data("listing-steamid");
+        return item.data("can_sell") && !item.data("listing_steamid");
     });
 }
 
