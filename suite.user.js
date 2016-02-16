@@ -1,9 +1,9 @@
 /*!
 // ==UserScript==
 // @name         backpack.tf enhancement suite
-// @namespace    http://steamcommunity.com/id/caresx/ http://steamcommunity.com/id/theoddball
+// @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.2.3
+// @version      1.6.2.4
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -974,8 +974,8 @@ function thirdPartyPrices() {
     if (Prefs.pref('other', 'thirdpartyprices')) return;
 
     function createDetails(item) {
-        var statsName = item.data('converted-from') ? item.data('converted-from') : item.data('name');
-        var friendlyUrl = '/' + item.data('q-name') + '/' + encodeURIComponent(statsName) + '/' + (item.data('tradable') == 1 ? "Tradable" : "Non-Tradable") + '/' + (item.data('craftable') == 1 ? "Craftable" : "Non-Craftable");
+        var statsName = item.data('converted_from') ? item.data('converted_from') : item.data('name');
+        var friendlyUrl = '/' + item.data('q_name') + '/' + encodeURIComponent(statsName) + '/' + (item.data('tradable') == 1 ? "Tradable" : "Non-Tradable") + '/' + (item.data('craftable') == 1 ? "Craftable" : "Non-Craftable");
 
         if (item.data('priceindex') && item.data('priceindex') !== 0) {
             friendlyUrl += '/' + item.data('priceindex');
@@ -2974,7 +2974,7 @@ var users = {
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-    8048498731: {badges: [2, 0], icon: ['pcg_hat_engineer.13ee1cad574b26c2b7d561a799f8edfaca9ac18c', 68, [-5, -6]]},
+    8048498731: {badges: [2, 0], icon: ['cc_summer2015_the_rotation_sensation.797f13ad026de3b5c065412d847494a812c0be4d', 19, [-5, -6]]},
     8080179568: {badges: [2], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]]},
 	};
 
