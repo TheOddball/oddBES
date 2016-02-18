@@ -2144,7 +2144,7 @@ function updateBackpack(steamid, next) {
 }
 
 function findSteamid(refresh) {
-    return refresh.closest('.media.listing').find('.media-object').find('li').data('listing-steamid');
+    return refresh.closest('.media.listing').find('.media-object').find('li').data('listing_steamid');
 }
 
 function addButtonListeners() {
