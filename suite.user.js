@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.2.4
+// @version      1.6.3
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -1785,9 +1785,9 @@ function listSelection(value) {
 function listItem(id, value, sample, then) {
     var payload = {
         details: value.message,
-        offers: +!!sample.data('listing-offers-url'), // value -> bool -> int
-        buyout: sample.data('listing-buyout'),
-        tradeoffer_url: sample.data('listing-offers-url'),
+        offers: +!!sample.data('listing_offers_url'), // value -> bool -> int
+        buyout: sample.data('listing_buyout'),
+        tradeoffer_url: sample.data('listing_offers_url'),
         'user-id': Page.csrfToken(),
         currencies: {
             metal: value.metal,
