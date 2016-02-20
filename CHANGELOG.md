@@ -1,3 +1,6 @@
+### v1.6.3 - v1.6.3.2
+Fixed many more bugs
+
 ### v1.6.1 & v1.6.2
 Fixed select page
 Fixed updating values (Thanks Zapperzz for reporting this!)
