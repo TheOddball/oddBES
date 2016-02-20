@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.3.1
+// @version      1.6.3.2
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -663,12 +663,12 @@ function peekload(html) {
 
     if (sellers.length) {
         $ppb.append('<h5>Sellers</h5><div id="classifieds-sellers" class="row"></div>');
-        $("#classifieds-sellers").html(sellers);
+        $("#classifieds_sellers").html(sellers);
     }
 
     if (buyers.length) {
         $ppb.append('<h5>Buyers</h5><div id="classifieds-buyers" class="row"></div>');
-        $("#classifieds-buyers").html(buyers);
+        $("#classifieds_buyers").html(buyers);
     }
 
     if (!sellers.length && !buyers.length) {
@@ -955,10 +955,10 @@ function addUnusualDetailsButtons() {
         var details = window.uDetails_createDetails(item),
             data = item[0].dataset;
 
-        if (data.app === "440" && data.quality === "5" && data.effectName) {
+        if (data.app === "440" && data.quality === "5" && data.effect_name) {
             details.find('.fa-list-alt').parent().after(
                 '<a class="btn btn-default btn-xs" href="/unusuals/' + data.name + '"><i class="fa fa-diamond"></i> Unusual</a>'+
-                '<a class="btn btn-default btn-xs" href="/effects/' + data.effectName + '"><i class="fa fa-paper-plane-o"></i> Effect</a>'
+                '<a class="btn btn-default btn-xs" href="/effects/' + data.effect_name + '"><i class="fa fa-magic"></i> Effect</a>'
             );
 
         }
