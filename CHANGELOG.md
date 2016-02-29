@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 ### v1.6.4
 Fixed refresh user bp in classies
 Added a new donor feature! Custom fonts! See the list here:
@@ -7,7 +6,6 @@ I won't add anything crazy or hard to read. I will moderate these, and if yours 
 =======
 ### v1.6.3 - v1.6.3.2
 Fixed many more bugs
->>>>>>> b4b99aafe549ac23870699d9e444aae4d5e0090a
 
 ### v1.6.1 & v1.6.2
 Fixed select page
