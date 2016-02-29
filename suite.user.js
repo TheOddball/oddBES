@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.3.2
+// @version      1.6.4
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -2139,12 +2139,13 @@ function updateBackpack(steamid, next) {
         next();
     } else {
         refreshed.push(steamid);
+        refreshed.push(steamid);
         $.get("http://backpack.tf/profiles/" + steamid, next);
     }
 }
 
 function findSteamid(refresh) {
-    return refresh.closest('.media.listing').find('.media-object').find('li').data('listing_steamid');
+    return refresh.closest('.media.listing').find('.media-body').find('.text-muted click-data-toggle').find('.user-handle-container').find('a').data('id');
 }
 
 function addButtonListeners() {
@@ -2974,7 +2975,7 @@ var users = {
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-    8048498731: {badges: [2, 0], icon: ['cc_summer2015_the_rotation_sensation.797f13ad026de3b5c065412d847494a812c0be4d', 19, [-5, -6]]},
+    8048498731: {badges: [2, 0], icon: ['cc_summer2015_captain_cardbeard_cutthroat.f0f28ff2df7a7be3e797cda9fc3eaec1f71df459', 58, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"]},
     8080179568: {badges: [2], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]]},
 	};
 
@@ -3001,10 +3002,14 @@ function changeUserColors(handle) {
         var id = this.dataset.id || "",
             u = users[id.substr(ID_PREFIX.length)];
 
-        if (!u || !u.color) return;
+        if (!u || (!u.color && !u.font)) return;
 
-        this.style.fontWeight = 'bold';
+        this.style.fontWeight = '700';
         this.style.setProperty('color', u.color, 'important');
+        
+        if (u.font){
+        this.style.setProperty('font-family', u.font);
+        }
     });
 }
 
