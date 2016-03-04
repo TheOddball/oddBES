@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.4
+// @version      1.6.4.1
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -2962,7 +2962,7 @@ function iconinf(item, particle, margins) {
 
 var users = {
     8070299574: {badges: [0], color: '#028482'},
-    8039453751: {badges: [1], icon: ['soldier_hat.61b68df2672217c4d2a2c98e3ed5e386a389d5cf', 14, [-4, -4]]},
+    8039453751: {badges: [1], icon: ['soldier_hat.61b68df2672217c4d2a2c98e3ed5e386a389d5cf', 14, [-4, -4]], font: ["TimesNewRoman, Times New Roman, Times, Baskerville, Georgia, serif"]},
     8068022595: {badges: [1], color: '#f9d200'},
     8107654171: {badges: [1], color: '#0b1c37', icon: ['xms2013_demo_plaid_hat.152c6db9806406bd10fd82bd518de3c89ccb6fad', 58, [-7, -8]]},
     8067575136: {badges: [1], icon: ['xms_pyro_parka.de5a5f80e74f428204a4f4a7d094612173adbe50', 13, [-9, -12]]},
@@ -2975,7 +2975,7 @@ var users = {
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-    8048498731: {badges: [2, 0], icon: ['cc_summer2015_captain_cardbeard_cutthroat.f0f28ff2df7a7be3e797cda9fc3eaec1f71df459', 58, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"]},
+    8048498731: {badges: [2, 0], color: '#9CDF59', icon: ['fall2013_the_cotton_head.38910f84b946d0afdc1b10a2674aa0a0278d822e', 19, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"]},
     8080179568: {badges: [2], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]]},
 	};
 
