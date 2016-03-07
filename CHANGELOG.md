@@ -1,3 +1,6 @@
+### v1.6.5
+Really fixed Refresh User BP in classies.
+
 ### v1.6.4
 Fixed refresh user bp in classies
 Added a new donor feature! Custom fonts! See the list here:

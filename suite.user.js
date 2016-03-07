@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.4.1
+// @version      1.6.5
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -2139,13 +2139,14 @@ function updateBackpack(steamid, next) {
         next();
     } else {
         refreshed.push(steamid);
-        refreshed.push(steamid);
         $.get("http://backpack.tf/profiles/" + steamid, next);
     }
 }
 
 function findSteamid(refresh) {
-    return refresh.closest('.media.listing').find('.media-body').find('.text-muted click-data-toggle').find('.user-handle-container').find('a').data('id');
+    var accountId = refresh.closest('.media.listing').find('.media-object').find('li').data('listing_account_id');
+    var steamId = Math.abs(accountId + 76561197960265728);
+    return steamId
 }
 
 function addButtonListeners() {
