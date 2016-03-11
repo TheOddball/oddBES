@@ -2999,7 +2999,7 @@ function badgePopovers() {
 }
 
 function changeUserColors(handle) {
-    handle.each(function () {
+    $('user-link').each(function () {
         var id = this.dataset.id || "",
             u = users[id.substr(ID_PREFIX.length)];
 
@@ -3015,7 +3015,7 @@ function changeUserColors(handle) {
 }
 
 function modifyBelts(handle) {
-    handle.each(function () {
+    $('user-link').each(function () {
         var id = this.dataset.id || "",
             u = users[id.substr(ID_PREFIX.length)],
             icon, belt, padding, lmargin, rmargin;
