@@ -1,3 +1,9 @@
+v1.6.7
+Added check escrow to classies
+
+### v1.6.6
+Improved preformance
+Fixed with new backpack.tf updates
 ### v1.6.5
 Really fixed Refresh User BP in classies.
 
