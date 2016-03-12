@@ -3,7 +3,7 @@
 // @name         backpack.tf enhancement suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       cares with edits by The Oddball
-// @version      1.6.5.1
+// @version      1.6.6
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -2976,7 +2976,7 @@ var users = {
     8117484140: {badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]]},
     8005031515: {badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]]},
     8076020691: {badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]]},
-    8048498731: {badges: [2, 0], color: '#9CDF59', icon: ['fall2013_the_cotton_head.38910f84b946d0afdc1b10a2674aa0a0278d822e', 19, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"]},
+    8048498731: {badges: [2, 0], color: '#E85065', icon: ['fall2013_the_cotton_head.38910f84b946d0afdc1b10a2674aa0a0278d822e', 19, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"]},
     8080179568: {badges: [2], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]]},
 	};
 
@@ -2999,7 +2999,7 @@ function badgePopovers() {
 }
 
 function changeUserColors(handle) {
-    handle.each(function () {
+    $('.user-link').each(function () {
         var id = this.dataset.id || "",
             u = users[id.substr(ID_PREFIX.length)];
 
@@ -3015,7 +3015,7 @@ function changeUserColors(handle) {
 }
 
 function modifyBelts(handle) {
-    handle.each(function () {
+    $('user-link').each(function () {
         var id = this.dataset.id || "",
             u = users[id.substr(ID_PREFIX.length)],
             icon, belt, padding, lmargin, rmargin;
