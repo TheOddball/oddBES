@@ -1,20 +1,19 @@
 /*!
 // ==UserScript==
-// @name         backpack.tf enhancement suite
+// @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
-// @author       cares with edits by The Oddball
-// @version      1.6.7
+// @author       The Oddball
+// @version      1.6.7.1
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
 // @require      https://caresx.github.io/backpacktf-enhancement-suite/deps.js
-// @downloadURL  https://theoddball.github.io/oddBES/suite.user.js
-// @updateURL    https://theoddball.github.io/oddBES/suite.meta.js
+// @downloadURL  https://github.com/theoddball/oddBES/raw/gh-pages/suite.user.js
+// @updateURL    https://github.com/theoddball/oddBES/raw/gh-pages/suite.meta.js
 // @grant        GM_xmlhttpRequest
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        GM_deleteValue
-// @require      https://gist.githubusercontent.com/Fiskie/b3eb298e4af8734d63ec/raw/a89780567dcb5b3d1a60b03d90cf9b4731978a72/inventory.js
 // ==/UserScript==
 */
 
