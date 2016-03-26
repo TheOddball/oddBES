@@ -1,9 +1,9 @@
 /*!
 // ==UserScript==
-// @name         backpack.tf enhancement suite
+// @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
-// @author       cares with edits by The Oddball
-// @version      1.6.7.2
+// @author       The Oddball
+// @version      1.6.7.3
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/

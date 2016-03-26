@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.7.2
+// @version      1.6.7.3
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -650,9 +650,9 @@
                 clone.classList.add('classifieds-clone');
                 clone.dataset.listingAutomatic = !!$this.closest('.media.listing').find('.fa-flash').length;
 
-                if (clone.dataset.listingIntent === '0') {
+                if (clone.dataset.listing_intent === '0') {
                     buyers.push(clone);
-                } else if (clone.dataset.listingIntent === '1') {
+                } else if (clone.dataset.listing_intent === '1') {
                     if (clone.dataset.listingAutomatic) {
                         Page.addItemIcon($this, '<div class="arrow-icon"><i class="fa fa-bolt"></i></div>');
                     }
@@ -692,11 +692,15 @@
         }
 
         function peek(e) {
+            var classiesString = '/classifieds?' + $('.item').each(function () {
+                var $this = $(this);
+                $this.data('query_string');
+            });
             if (e) e.preventDefault();
 
             $.ajax({
                 method: "GET",
-                url: $('.item').data('listing-url'),
+                url: classiesString,
                 dataType: "html"
             }).done(peekload);
         }
@@ -1667,7 +1671,7 @@
         function currentSelection() {
             return $('.item:not(.spacer,.unselected,.ql-cloned):visible').filter(function () {
                 var item = $(this);
-                return item.data("can_sell") && !item.data("listing_steamid");
+                return item.data("can_sell") && !item.data("listing_account_id");
             });
         }
 
@@ -1797,10 +1801,10 @@
 
             // id: current item id
             $.post("http://backpack.tf/classifieds/sell/" + id, payload, function (page) {
-                var ok = /<div class="panel-heading">Sell Orders<\/div>/.test(page),
+                var ok = /<div class="alert alert-dismissable alert-success">/.test(page),
                     item = $('[data-id="' + id + '"]');
 
-                item.css('opacity', 0.6).data('can-sell', 0)
+                item.css('opacity', 0.6).data('can_sell', 0)
                     .find('.tag.bottom-right').html(ok ? '<i class="fa fa-tag"></i> ' + qlFormatValue(value, false) : '<i class="fa fa-exclamation-circle" style="color:red"></i>');
 
                 if (then) then();
@@ -3060,7 +3064,7 @@
             8117484140: { badges: [1], color: '#00BBFF', icon: ['medic_ttg_max.5c4b7fcf10ab25fbd166831aea1979395549cb75', 13, [-10, -11]] },
             8005031515: { badges: [1], icon: ['demo_hood.2fa33d5d09dcbfed6345cf927db03c10170b341e', 29, [-2, -5]] },
             8076020691: { badges: [1], color: '#a0d126', icon: ['witchhat_demo.75012466ebcf4d9d81c6d7f75ca646b673114353', 6, [-6, -7]] },
-            8048498731: { badges: [2, 0], color: '#E85065', icon: ['fall2013_the_cotton_head.38910f84b946d0afdc1b10a2674aa0a0278d822e', 19, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"] },
+            8048498731: { badges: [2, 0], color: '#9CDF59', icon: ['pcg_hat_engineer.13ee1cad574b26c2b7d561a799f8edfaca9ac18c', 9, [-5, -6]], font: ["Tahoma, Geneva, sans-serif"] },
             8080179568: { badges: [2], icon: ['tooth_hat.c2014cb6315e2ce880058cdcd0a7569056b11260', 10, [-5, -6]] },
         };
 
