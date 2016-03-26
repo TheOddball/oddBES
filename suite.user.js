@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.7.3
+// @version      1.6.8
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -663,12 +663,12 @@
 
             if (sellers.length) {
                 $ppb.append('<h5>Sellers</h5><div id="classifieds-sellers" class="row"></div>');
-                $("#classifieds_sellers").html(sellers);
+                $("#classifieds-sellers").html(sellers);
             }
 
             if (buyers.length) {
                 $ppb.append('<h5>Buyers</h5><div id="classifieds-buyers" class="row"></div>');
-                $("#classifieds_buyers").html(buyers);
+                $("#classifieds-buyers").html(buyers);
             }
 
             if (!sellers.length && !buyers.length) {
@@ -692,10 +692,7 @@
         }
 
         function peek(e) {
-            var classiesString = '/classifieds?' + $('.item').each(function () {
-                var $this = $(this);
-                $this.data('query_string');
-            });
+            var classiesString = '/classifieds?' + $('.item').data('query_string');
             if (e) e.preventDefault();
 
             $.ajax({

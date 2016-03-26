@@ -1,7 +1,10 @@
-###v1.6.7.3
+### v1.6.8
+Fixed classies peek
+
+### v1.6.7.3
 Fixed quicklisting
 
-###v1.6.7
+### v1.6.7
 Added check escrow to classies
 
 ### v1.6.6
