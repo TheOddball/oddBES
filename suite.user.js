@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.8
+// @version      1.6.8.1
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -705,7 +705,7 @@
         function add(sig) {
             var htm =
                 '<div class="row"><div class="col-md-12 "><div class="panel panel-main" id="peek-panel">' +
-                '<div class="panel-heading">Classifieds <span class="pull-right"><small><a href="#" id="classifieds-peek">Peek</a></small></span></div>' +
+                '<div class="panel-heading">Classifieds <span class="pull-right"><small><a href="#" id="classifieds-peek" style="color: #fff";>Peek</a></small></span></div>' +
                 '</div></div></div></div>';
             var signature = Prefs.pref('classifieds', sig),
                 $details = $("#details");
