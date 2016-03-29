@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.8.1
+// @version      1.6.8.2
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -2277,7 +2277,7 @@
         }
 
         function addRallHeader() {
-            var header = $('<span class="pull-right"><small><a href="#" id="header-refresh-all">Refresh All</a></small></span>');
+            var header = $('<span class="pull-right"><small><a href="#" id="header-refresh-all" style="color: #fff";">Refresh All</a></small></span>');
             header.find('#header-refresh-all').click(refreshAll);
 
             $('.panel-heading:contains(Sell Orders)').append(header);
