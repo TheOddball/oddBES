@@ -1652,11 +1652,17 @@ var Page = require('../page'),
     Script = require('../script'),
     DataStore = require('../datastore');
 
-var currencyNames = { "long": { "keys": ["key", "keys"], "metal": ["ref", "ref"] }, "short": { "keys": ["k", "k"], "metal": ["r", "r"] } },
+var currencyNames = { "long": 
+    { "keys": ["key", "keys"], 
+      "metal": ["ref", "ref"] }, 
+      "short": 
+      { "keys": ["k", "k"], 
+        "metal": ["r", "r"] } 
+    },
     defaults = [
-{ metal: 0.05, keys: 0, message: "" },
-{ metal: 0.11, keys: 0, message: "" },
-{ metal: 0, keys: 1, message: "" }
+        { metal: 0.05, keys: 0, message: "" },
+        { metal: 0.11, keys: 0, message: "" },
+        { metal: 0, keys: 1, message: "" }
     ],
     values;
 
@@ -1675,6 +1681,7 @@ function addQuicklistPanelButtons() {
     $('#show-markdown-modal').before(' <a id="bp-custom-select-ql" class="btn btn-default btn-primary btn-xs disabled" href="##">Quicklist selection</a>');
 }
 
+// Change whether or not the Quicklist button is active
 function updateSelectQuicklist() {
     $("#bp-custom-select-ql").toggleClass("disabled", !inventory.selectionMode);
 }
@@ -1695,6 +1702,7 @@ function findSample() {
     return $('[data-listing_offers_url]').first();
 }
 
+// Selected items don't have the unselected class, while unselected ones do
 function currentSelection() {
     return $('.item:not(.spacer,.unselected,.ql-cloned):visible').filter(function () {
         var item = $(this);
@@ -1866,17 +1874,6 @@ function copyButtonValues(value, elem) {
     }
 }
 
-if (Page.isBackpack()) {
-    inventory.clearSelection = function () {
-        if (inventory.selectionMode) {
-            selectItem($('.item'));
-            disableSelectionMode();
-            updateValues();
-            updateClearSelectionState();
-        }
-    };
-}
-
 function disableSelectionMode() {
     inventory.selectionMode = false;
     ITEM_POPOVERS_DISABLED = false;
@@ -1941,7 +1938,7 @@ function updateValues() {
 
 function clearSelection() {
     if (inventory.selectionMode) {
-        selectItem($('.item'));
+        Page.selectItem($('.item'));
         disableSelectionMode();
         updateValues();
         updateClearSelectionState();
@@ -2042,7 +2039,7 @@ function addSelectPageButtons() {
 }
 
 function addHooks() {
-    $('clear-selection').click(function () {
+    $('#clear-selection').click(function () {
         if (!$(this).hasClass('disabled')) {
             updateSelectQuicklist();
         }
