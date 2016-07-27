@@ -2,11 +2,11 @@ var Page = require('../page'),
     Script = require('../script'),
     DataStore = require('../datastore');
 
-var currencyNames = {"long":{"keys":["key","keys"],"metal":["ref","ref"]},"short":{"keys":["k","k"],"metal":["r","r"]}},
+var currencyNames = { "long": { "keys": ["key", "keys"], "metal": ["ref", "ref"] }, "short": { "keys": ["k", "k"], "metal": ["r", "r"] } },
     defaults = [
-        {metal: 0.05, keys: 0,  message: ""},
-        {metal: 0.11, keys: 0, message: ""},
-        {metal: 0, keys: 1, message: ""}
+{ metal: 0.05, keys: 0, message: "" },
+{ metal: 0.11, keys: 0, message: "" },
+{ metal: 0, keys: 1, message: "" }
     ],
     values;
 
@@ -26,12 +26,12 @@ function addQuicklistPanelButtons() {
 }
 
 function updateSelectQuicklist() {
-    $("#bp-custom-select-ql").toggleClass("disabled", !Page.bp().selectionMode);
+    $("#bp-custom-select-ql").toggleClass("disabled", !inventory.selectionMode);
 }
 
 function onActionButtonClick() {
     var $this = $(this),
-        action = $this.data('action');
+    action = $this.data('action');
 
     if (action === 'select') {
         copyButtonValues(values[$(this).data('idx')], $('.ql-button-values'));
@@ -42,20 +42,20 @@ function onActionButtonClick() {
 }
 
 function findSample() {
-    return $('[data-listing-offers-url]').first();
+    return $('[data-listing_offers_url]').first();
 }
 
 function currentSelection() {
     return $('.item:not(.spacer,.unselected,.ql-cloned):visible').filter(function () {
         var item = $(this);
-        return item.data("can-sell") && !item.data("listing-steamid");
+        return item.data("can_sell") && !item.data("listing_account_id");
     });
 }
 
 function qlFormatValue(value, short) {
     var str = [],
-        cnames = currencyNames[short ? "short" : "long"],
-        space = short ? "" : " ";
+    cnames = currencyNames[short ? "short" : "long"],
+    space = short ? "" : " ";
 
     if (value.keys) str.push(value.keys + space + cnames.keys[+(value.keys !== 1)]);
     if (value.metal) str.push(value.metal + space + cnames.metal[+(value.metal !== 1)]);
@@ -64,8 +64,8 @@ function qlFormatValue(value, short) {
 
 function addStyles() {
     Page.addStyle(
-        ".ql-button-value-idx { margin-right: 3px; }"
-    );
+            ".ql-button-value-idx { margin-right: 3px; }"
+            );
 }
 
 function quicklistSelectHtml(value, idx) {
@@ -73,18 +73,18 @@ function quicklistSelectHtml(value, idx) {
 }
 
 function quicklistBtnHtml(metal, keys, message, remove) {
-    return '<div class="ql-button-values">'+
-        '<div class="row">'+
-            '<div class="col-md-3"><label>Metal</label>'+
-            '<input type="text" placeholder="0" class="col-md-3 ql-metal form-control" value="' + metal + '"></div>'+
-            '<div class="col-md-3"><label>Keys</label>'+
-            '<input type="text" placeholder="0" class="col-md-3 ql-keys form-control" value="' + keys + '"></div>'+
-        (remove !== false ? '<a class="btn btn-primary btn-xs ql-remove-button">Remove</a>' : '')+
-        '</div>'+
-        '<div class="row">'+
-            '<div class="col-md-12"><label>Message</label>'+
-            '<input type="text" class="col-md-3 form-control ql-message" value="' + Page.escapeHtml(message) + '"></div>'+
-        '</div>'+
+    return '<div class="ql-button-values">' +
+        '<div class="row">' +
+        '<div class="col-md-3"><label>Metal</label>' +
+        '<input type="text" placeholder="0" class="col-md-3 ql-metal form-control" value="' + metal + '"></div>' +
+        '<div class="col-md-3"><label>Keys</label>' +
+        '<input type="text" placeholder="0" class="col-md-3 ql-keys form-control" value="' + keys + '"></div>' +
+        (remove !== false ? '<a class="btn btn-primary btn-xs ql-remove-button">Remove</a>' : '') +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="col-md-12"><label>Message</label>' +
+        '<input type="text" class="col-md-3 form-control ql-message" value="' + Page.escapeHtml(message) + '"></div>' +
+        '</div>' +
         '</div>';
 }
 
@@ -100,8 +100,8 @@ function selectQuicklist() {
     }
 
     var html =
-        "<p>Select a preset for this batch of items, or enter one manually. Click on the respective button to fill in the values.</p>"+
-        "<div id='ql-cloned-batch' class='row'></div>"+
+        "<p>Select a preset for this batch of items, or enter one manually. Click on the respective button to fill in the values.</p>" +
+        "<div id='ql-cloned-batch' class='row'></div>" +
         "<div id='ql-button-listing' class='row'>";
 
     values.forEach(function (vals, idx) {
@@ -128,7 +128,7 @@ function addEventListeners() {
     $(document).on('click', '.ql-action-button', onActionButtonClick);
 
     $("#bp-custom-select-ql").click(function () {
-        if (Page.bp().selectionMode) {
+        if (inventory.selectionMode) {
             selectQuicklist();
         }
     });
@@ -137,12 +137,13 @@ function addEventListeners() {
 
 function listSelection(value) {
     var selection = currentSelection(),
-        sample = findSample(),
-        items = [],
-        at = 0;
+    sample = findSample(),
+    items = [],
+    at = 0;
 
-    _clearSelection();
-    Page.bp().updateClearSelectionState();
+    clearSelection();
+    updateSelectQuicklist();
+    updateClearSelectionState();
 
     selection.each(function () {
         var $this = $(this);
@@ -165,9 +166,9 @@ function listSelection(value) {
 function listItem(id, value, sample, then) {
     var payload = {
         details: value.message,
-        offers: +!!sample.data('listing-offers-url'), // value -> bool -> int
-        buyout: sample.data('listing-buyout'),
-        tradeoffer_url: sample.data('listing-offers-url'),
+        offers: +!!sample.data('listing_offers_url'), // value -> bool -> int
+        buyout: sample.data('listing_buyout'),
+        tradeoffer_url: sample.data('listing_offers_url'),
         'user-id': Page.csrfToken(),
         currencies: {
             metal: value.metal,
@@ -177,20 +178,19 @@ function listItem(id, value, sample, then) {
 
     // id: current item id
     $.post("http://backpack.tf/classifieds/sell/" + id, payload, function (page) {
-        var ok = /<i class="fa fa-check-circle"><\/i> Your listing was posted successfully. <\/div>/.test(page),
-            item = $('[data-id="' + id + '"]');
+        var ok = /<div class="alert alert-dismissable alert-success">/.test(page),
+        item = $('[data-id="' + id + '"]');
 
-        item.css('opacity', 0.6).data('can-sell', 0)
+        item.css('opacity', 0.6).data('can_sell', 0)
             .find('.tag.bottom-right').html(ok ? '<i class="fa fa-tag"></i> ' + qlFormatValue(value, false) : '<i class="fa fa-exclamation-circle" style="color:red"></i>');
 
-        if (!ok && !Script.window.confirm('Error occured, continue listing?')) return;
         if (then) then();
     });
 }
 
 function collectButtonValues() {
     var elems = $('.ql-button-values'),
-        values = [];
+    values = [];
 
     elems.each(function () {
         values.push(buttonValue($(this)));
@@ -216,15 +216,105 @@ function copyButtonValues(value, elem) {
     }
 }
 
+if (Page.isBackpack()) {
+    inventory.clearSelection = function () {
+        if (inventory.selectionMode) {
+            selectItem($('.item'));
+            disableSelectionMode();
+            updateValues();
+            updateClearSelectionState();
+        }
+    };
+}
+
+function disableSelectionMode() {
+    inventory.selectionMode = false;
+    ITEM_POPOVERS_DISABLED = false;
+};
+
+function updateValues() {
+    var li,
+    totalkeys = 0,
+    totalmetal = 0,
+    curvalue = 0,
+    marketvalue = 0,
+    totalitems = 0;
+
+    if (inventory.selectionMode) {
+        li = $('.item:not(.spacer,.unselected):visible');
+    } else {
+        li = $('.item:not(.spacer):visible');
+    }
+
+    li.each(function () {
+        // only count items
+        totalitems++;
+        curvalue = curvalue + parseFloat($(this).data('price'));
+
+        if ($(this).data('market-p') && $(this).data('market-p') != -1) {
+            marketvalue += $(this).data('market-p');
+        }
+
+        if ($(this).data('app') == 440) {
+            switch ($(this).data('defindex')) {
+                case 5000:
+                    totalmetal += 0.111111;
+                    break;
+
+                case 5001:
+                    totalmetal += 0.333333;
+                    break;
+
+                case 5002:
+                    totalmetal++;
+                    break;
+            }
+        }
+
+        if ($(this).data('is-key')) {
+            totalkeys++;
+        }
+    });
+
+    if (totalmetal % 1 >= 0.9) {
+        // If it's x.99, round up
+        totalmetal = Math.round(totalmetal);
+    }
+
+    $('#keycount').html(totalkeys.format());
+    $('#metalcount').html((Math.floor(totalmetal * 100) / 100).toFixed(2));
+    $('#refinedvalue').html(Math.round(curvalue).format());
+    $('#dollarvalue').html(Math.round(curvalue * rawValue).format());
+    $('#marketvalue').html(Math.round(marketvalue / 100).format());
+    $('#totalitems').html(totalitems.format());
+};
+
+function clearSelection() {
+    if (inventory.selectionMode) {
+        selectItem($('.item'));
+        disableSelectionMode();
+        updateValues();
+        updateClearSelectionState();
+    }
+};
+
+function updateClearSelectionState() {
+    if (inventory.selectionMode) {
+        $('#clear-selection').removeClass('disabled');
+    } else {
+        $('#clear-selection').addClass('disabled');
+    }
+};
+
 function modifyQuicklists() {
     var html =
-        "<p>Add, edit, and remove quicklist presets here. Metal can have two decimals, keys must be integers (no decimals). If any value is missing, it is defaulted to 0, with the exception of the message, which then is empty.</p>"+
+        "<p>Add, edit, and remove quicklist presets here. Metal can have two decimals, keys must be integers (no decimals). If any value is missing, it is defaulted to 0, with the exception of the message, which then is empty.</p>" +
         "<div id='ql-button-listing'>";
 
     values.forEach(function (vals) {
         html += quicklistBtnHtml(vals.metal, vals.keys, vals.message);
     });
-    html += "</div>"+
+    html += "</div>" +
         '<a class="btn btn-default ql-add-button">Add</a>';
 
     Page.modal("Modify Quicklist Presets", html, '<a class="btn btn-default btn-primary ql-save-button">Save</a>');
@@ -248,13 +338,13 @@ function modifyQuicklists() {
 }
 
 function addSelectPage() {
-    var bp = Page.bp();
+    var bp = inventory;
     function selectItems(items) {
-        bp.selectionMode = true;
+        inventory.selectionMode = true;
         Page.selectItem(items);
 
-        bp.updateClearSelectionState();
-        bp.updateValues();
+        updateClearSelectionState();
+        updateValues();
         updateSelectQuicklist();
     }
 
@@ -263,12 +353,14 @@ function addSelectPage() {
 
         if (!pageitems.length) return;
 
-        if (bp.selectionMode) {
+        if (inventory.selectionMode) {
             if (pageitems.length === pageitems.not('.unselected').length) { // all == selected
                 Page.unselectItem(pageitems);
 
                 if ($('.item:not(.unselected)').length === 0) {
-                    _clearSelection();
+                    clearSelection();
+                    updateSelectQuicklist();
+                    updateValues();
                     return;
                 }
             } else {
@@ -281,16 +373,11 @@ function addSelectPage() {
     });
 }
 
-function _clearSelection() {
-    Page.bp().clearSelection();
-    updateSelectQuicklist();
-}
-
 function addSelectPageButtons() {
     $('.page-number').each(function () {
         var $this = $(this),
-            label = $this.find('.page-anchor'),
-            sp;
+        label = $this.find('.page-anchor'),
+        sp;
 
         if (!label[0]) return;
         sp = $this.find('.select-page');
@@ -305,32 +392,32 @@ function addSelectPageButtons() {
 }
 
 function addHooks() {
-    $('#clear-selection').click(function () {
+    $('clear-selection').click(function () {
         if (!$(this).hasClass('disabled')) {
             updateSelectQuicklist();
         }
     });
 
     Script.exec(
-        "var old_updateDisplay = window.backpack.updateDisplay;"+
-        addSelectPageButtons+
-        "window.backpack.updateDisplay = function () { old_updateDisplay.call(window.backpack); addSelectPageButtons(); }"
-    );
+            "var old_updateDisplay = window.backpack.updateDisplay;" +
+            addSelectPageButtons +
+            "window.backpack.updateDisplay = function () { old_updateDisplay.call(window.backpack); addSelectPageButtons(); }"
+            );
 }
 
 function addItemShiftClick() {
     var $i = $('.item:not(.spacer)'),
-        bp = Page.bp(),
-        $last, $select;
+    bp = inventory,
+    $last, $select;
 
     Script.exec("$('.item:not(.spacer)').off('click');");
     $i.click(function (e) {
         var $this = $(this),
-            $lidx;
+        $lidx;
 
         updateSelectQuicklist();
 
-        if (!bp.selectionMode) {
+        if (!inventory.selectionMode) {
             $last = null;
             if ($this.siblings('.popover').length === 0) {
                 // Touchscreen compatibility.
@@ -338,12 +425,12 @@ function addItemShiftClick() {
                 return;
             }
 
-            bp.selectionMode = true;
+            inventory.selectionMode = true;
             Page.unselectItem($('.item'));
             Page.selectItem($this);
             $last = $this;
 
-            bp.updateClearSelectionState();
+            updateClearSelectionState();
         } else {
             if ($this.hasClass('unselected')) {
                 if (e.shiftKey && $last && $last.not('.unselected') && ($lidx = $i.index($last)) !== -1) {
@@ -367,20 +454,21 @@ function addItemShiftClick() {
                 Page.unselectItem($this);
 
                 if ($('.item:not(.unselected)').length === 0) {
-                    bp.selectionMode = false;
+                    inventory.selectionMode = false;
                     Page.selectItem($('.item'));
-                    bp.updateClearSelectionState();
+                    updateClearSelectionState();
+                    updateValues();
                 }
             }
         }
 
         $('#clear-selection').click(function () {
             if (!$(this).hasClass('disabled')) {
-                bp.clearSelection();
+                disableSelectionMode();
             }
         });
 
-        bp.updateValues();
+        updateValues();
     });
 }
 
@@ -403,3 +491,5 @@ function load() {
 
 module.exports = load;
 module.exports.modifyQuicklists = modifyQuicklists;
+
+

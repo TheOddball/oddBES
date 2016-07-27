@@ -109,11 +109,12 @@ function peekload(html) {
 }
 
 function peek(e) {
+    var classiesString = '/classifieds?' + $('.item').data('query_string');
     if (e) e.preventDefault();
 
     $.ajax({
         method: "GET",
-        url: $('.item').data('listing-url'),
+        url: classiesString,
         dataType: "html"
     }).done(peekload);
 }

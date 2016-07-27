@@ -47,10 +47,6 @@ function addDupeCheck() {
 function bpDupeCheck() {
     var items = [];
 
-    if (Page.bp().selectionMode) {
-        return alert("Select the items you want to dupe-check first.");
-    }
-
     $('.item:not(.spacer,.unselected):visible').each(function () {
         var $this = $(this),
             stack = Page.addItemIcon($this);
