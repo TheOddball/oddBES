@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.8.2
+// @version      1.6.8.3
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -101,89 +101,6 @@ Page.addTooltips();
 
 $(document).off('click.bs.button.data-api'); // Fix for bootstrap
 Page.loaded = true;
-/*!
- * backpack.tf Enhancement Suite - enhancing your backpack.tf experience
- * Made by cares <http://steamcommunity.com/id/caresx>
- *
- * Post feedback + view instuctions:
-   http://forums.backpack.tf/index.php?/topic/36130-backpacktf-enhancement-suite/
- * Browse the source code: https://github.com/caresx/backpacktf-enhancement-suite
- * Changelog:
-   https://github.com/caresx/backpacktf-enhancement-suite/blob/gh-pages/CHANGELOG.md
- *
- * Edit your preferences: http://backpack.tf/my/preferences##bes
- */
-
-var Prefs = require('./preferences'),
-    Page = require('./page');
-
-// Ignore non-html pages
-if (!document.getElementById("helpers")) return;
-
-Page.init();
-require('./api').init();
-
-Prefs.defaults({
-    lotto: {show: true},
-    notifications: {updatecount: 'click'},
-    pricetags: {
-        modmult: 0.5,
-        tooltips: true
-    },
-    changes: {
-        enabled: true,
-        outdatedwarn: true,
-        period: 1000 * 60 * 60 * 24 // 1d
-    },
-    pricing: {
-        step: EconCC.Disabled,
-        range: EconCC.Range.Mid
-    },
-    classifieds: {
-        signature: '',
-        'signature-buy': '',
-        autoclose: true,
-        autopeek: false,
-        autofill: 'default'
-    },
-    homebg: {
-        image: '',
-        repeat: 'no-repeat',
-        posy: 'top',
-        posx: 'center',
-        attachment: 'fixed',
-        sizing: 'cover',
-        replacewalls: true
-    },
-    other: {
-        originalkeys: false,
-        thirdpartyprices: true
-    }
-});
-
-function exec(mod) {
-    mod();
-    mod.initialized = true;
-}
-
-exec(require('./components/improvements'));
-exec(require('./components/reptf'));
-exec(require('./components/quicklist')); // prefs checked inside main
-exec(require('./components/pricetags'));
-if (Prefs.enabled('changes')) exec(require('./components/changes'));
-exec(require('./components/refresh'));
-exec(require('./components/classifieds'));
-exec(require('./components/prefs'));
-exec(require('./components/search'));
-exec(require('./components/dupes'));
-exec(require('./components/users'));
-
-require('./menu-actions').applyActions();
-Page.addTooltips();
-
-$(document).off('click.bs.button.data-api'); // Fix for bootstrap
-Page.loaded = true;
-
 //End suite.js
 
 },{"./api":2,"./components/changes":5,"./components/classifieds":6,"./components/dupes":7,"./components/improvements":8,"./components/prefs":9,"./components/pricetags":10,"./components/quicklist":11,"./components/refresh":12,"./components/reptf":13,"./components/search":14,"./components/users":18,"./menu-actions":22,"./page":23,"./preferences":24}],2:[function(require,module,exports){
@@ -341,160 +258,6 @@ exports.IGetUserListings = function (steamid, callback, args) {
         version: 2
     }, callback, args);
 };
-var Page = require('./page'),
-    Key = require('./helpers/apikey'),
-    Queue = require('./helpers/queue'),
-    Cache = require('./cache');
-
-var apicache = new Cache("bes-cache-api");
-var queue, key;
-
-function Icall(meta, callback, args) {
-    var iname = meta.name[0] !== 'I' ? 'I' + meta.name : meta.name,
-        version = (typeof meta.version === 'string' ? meta.version : 'v' + meta.version),
-        url = "/api/" + iname + "/" + version + "/",
-        data = {key: key.key, appid: meta.appid || 440, compress: 1},
-        val, signature, wait, i;
-
-    args = args || {};
-
-    for (i in args) {
-        data[i] = args[i];
-    }
-
-    if (meta.cache) {
-        signature = url + "--" + JSON.stringify(data);
-        val = apicache.get(signature);
-
-        if (val.value) {
-            if (val.value.success) {
-                callback(val.value);
-                queue.done();
-                return;
-            } else {
-                apicache.rm(signature).save();
-            }
-        }
-    }
-
-    function equeue() { queue.enqueue(meta, callback, args); queue.done(); }
-    $.ajax({
-        method: 'GET',
-        url: url,
-        data: data,
-        cache: false,
-        dataType: 'json'
-    }).then(function (json) {
-        var success = json.response.success;
-
-        if (!success) {
-            if (meta._fail) return;
-            console.error('API error :: ' + iname + ': ' + JSON.stringify(json));
-            if (json.message === "API key does not exist." || json.message === "This API key is not valid.") {
-                key.remove();
-                equeue();
-                key.load();
-            } else if (/^You can only request this page every/.test(json.message)) {
-                wait = json.message.match(/\d/g)[1] * 1000;
-                setTimeout(equeue, wait + 100 + Math.round(Math.random() * 1000)); // to be safe, protection against race conditions
-            } else { // Unknown error, maybe network disconnected
-                setTimeout(function () {
-                    meta._fail = true;
-                    equeue();
-                }, 1000);
-            }
-            return;
-        }
-
-        if (meta.cache) {
-            apicache
-                .timeout(meta.cache || 1000 * 60)
-                .set(signature, json.response)
-                .save()
-            ;
-        }
-
-        callback(json.response);
-        queue.done();
-    });
-}
-
-function q() { queue.enqueue.apply(queue, arguments); }
-
-exports.init = function () {
-    queue = new Queue();
-    queue.exec = Icall.bind(queue);
-    queue.canProceed = function () {
-        return !!key.key;
-    }.bind(queue);
-
-    key = new Key("backpackapikey", {url: 'https://backpack.tf/api/register'}, queue.next.bind(queue));
-    key.extract = function (text) {
-        return (text.match(/<pre>([a-f\d]{24})<\/pre>/) || [])[1];
-    }.bind(key);
-    key.register = function () {
-        var token = Page.csrfToken(),
-            self = this;
-
-        if (!token) return; // :(
-        $.ajax({
-            method: 'POST',
-            url: "/api/register",
-            data: {url: "backpack.tf", comments: "backpack.tf Enhancement Suite", "user-id": token},
-            dataType: 'text'
-        }).then(function (body) {
-            self.set(self.extract(body));
-        });
-    }.bind(key);
-
-    key.load();
-};
-
-exports.interface = exports.I = exports.call = q;
-exports.IGetPrices = function (callback, args) {
-    return q({
-        name: "IGetPrices",
-        version: 4,
-        cache: 1000 * 60 * 30 // 30m
-    }, callback, args);
-};
-
-exports.IGetCurrencies = function (callback, args) {
-    return q({
-        name: "IGetCurrencies",
-        version: 1,
-        cache: 1000 * 60 * 60 * 24 // 24h
-    }, callback, args);
-};
-
-exports.IGetSpecialItems = function (callback, args) {
-    return q({
-        name: "IGetSpecialItems",
-        version: 1,
-        cache: 1000 * 60 * 60 * 24 // 24h
-    }, callback, args);
-};
-
-exports.IGetUsers = function (ids, callback, args) {
-    args = args || {};
-
-    args.ids = Array.isArray(ids) ? ids.join(",") : ids;
-    return q({
-        name: "IGetUsers",
-        version: 2
-    }, callback, args);
-};
-
-exports.IGetUserListings = function (steamid, callback, args) {
-    args = args || {};
-
-    args.steamid = steamid;
-    return q({
-        name: "IGetUserListings",
-        version: 2
-    }, callback, args);
-};
-
 //End api.js
 
 },{"./cache":3,"./helpers/apikey":20,"./helpers/queue":21,"./page":23}],3:[function(require,module,exports){
@@ -560,68 +323,6 @@ Cache.prototype.prune = function () {
 
 module.exports = Cache;
 module.exports.names = names;
-var DataStore = require('./datastore');
-var names = [];
-
-function Cache(name, pruneTime) {
-    this.name = name;
-    this.storage = JSON.parse(DataStore.getItem(name) || "{}");
-    this.pruneTime = typeof pruneTime === 'number' ? pruneTime : 1000;
-
-    names.push(name);
-}
-
-Cache.prototype.get = function (name) {
-    var updated = this.prune();
-
-    if (this.storage[name]) {
-        if (updated) this.save();
-        return {value: this.storage[name].json};
-    }
-
-    return {update: true};
-};
-
-Cache.prototype.set = function (name, json) {
-    this.storage[name] = {time: Date.now() + this.pruneTime, json: json};
-    return this;
-};
-
-Cache.prototype.rm = function (name) {
-    delete this.storage[name];
-    return this;
-};
-
-Cache.prototype.save = function () {
-    DataStore.setItem(this.name, JSON.stringify(this.storage));
-    return this;
-};
-
-Cache.prototype.timeout = function (t) {
-    this.pruneTime = t;
-    return this;
-};
-
-Cache.prototype.prune = function () {
-    var updated = false,
-        time, uid;
-
-    if (this.pruneTime <= 0) return updated;
-    for (uid in this.storage) {
-        time = this.storage[uid].time;
-
-        if (Date.now() > time) {
-            updated = true;
-            delete this.storage[uid];
-        }
-    }
-
-    return updated;
-};
-
-module.exports = Cache;
-module.exports.names = names;
-
 //End cache.js
 
 },{"./datastore":19}],4:[function(require,module,exports){
@@ -3517,27 +3218,6 @@ exports.getItem = function (name) {
 exports.removeItem = function (name) {
     return GM_deleteValue(name);
 };
-exports.setItem = function (name, value) {
-    return GM_setValue(name, value);
-};
-
-exports.getItem = function (name) {
-    var lsItem = localStorage.getItem(name);
-
-    // Migrate to GM storage for cross subdomain storage
-    if (lsItem) {
-        GM_setValue(name, lsItem);
-        localStorage.removeItem(name);
-        return lsItem;
-    }
-
-    return GM_getValue(name);
-};
-
-exports.removeItem = function (name) {
-    return GM_deleteValue(name);
-};
-
 //End datastore.js
 
 },{}],20:[function(require,module,exports){
@@ -3679,40 +3359,6 @@ exports.applyActions = function () {
 
     actions = [];
 };
-var Page = require('./page');
-var actions = [];
-
-exports.addAction = function (obj) {
-    actions.push(obj);
-    if (Page.loaded) exports.applyActions();
-    return this;
-};
-
-exports.applyActions = function () {
-    if (!Page.loggedIn()) return;
-    if (!actions.length) return;
-
-    if (!document.getElementById('bp-custom-actions')) {
-        $('.navbar-profile-nav .dropdown-menu a[href="/donate"]').parent().find('+ .divider') // Fix for mods
-            .after('<li class="divider" id="bp-custom-actions"></li>');
-    }
-
-    var html = "";
-    actions.forEach(function (action) {
-        html += '<li><a href="#" id="' + action.id + '"><i class="fa fa-fw ' + action.icon + '"></i> ' + action.name + '</a></li>';
-    });
-
-    $('#bp-custom-actions').before(html);
-    actions.forEach(function (action) {
-        document.getElementById(action.id).addEventListener('click', function (e) {
-            e.preventDefault();
-            action.click.call(this);
-        }, false);
-    });
-
-    actions = [];
-};
-
 //End menu-actions.js
 
 },{"./page":23}],23:[function(require,module,exports){
@@ -4210,103 +3856,6 @@ function applyPrefs(prefs) {
     exports.save();
     return exports;
 }
-var DataStore = require('./datastore');
-var preferences = loadFromDS();
-
-exports.dirty = false;
-exports.prefs = preferences;
-
-exports.loadFromDS = loadFromDS;
-exports.saveToDS = saveToDS;
-exports.enabled = enabled;
-exports.pref = pref;
-exports.default = def;
-exports.defaults = defaults;
-exports.save = save;
-exports.applyPrefs = applyPrefs;
-
-function loadFromDS() {
-    return JSON.parse(DataStore.getItem("bes-preferences") || '{"features": {}}');
-}
-
-function saveToDS(o) {
-    DataStore.setItem("bes-preferences", JSON.stringify(o));
-    return exports;
-}
-
-function enabled(feat) {
-    var o = preferences.features[feat];
-    return o ? o.enabled : false;
-}
-
-function pref(feat, name, value) {
-    var o = preferences.features[feat];
-    if (!o) o = preferences.features[feat] = {};
-
-    if (arguments.length === 2) {
-        return o[name];
-    } else {
-        o[name] = value;
-        exports.dirty = true;
-    }
-
-    return exports;
-}
-
-function def(feat, name, value) {
-    var o = preferences.features[feat];
-
-    if (!o) o = preferences.features[feat] = {};
-    if (!o.hasOwnProperty(name)) {
-        o[name] = value;
-        exports.dirty = true;
-    }
-
-    return exports;
-}
-
-function defaults(defs) {
-    var feat, o, names, name, value;
-
-    for (feat in defs) {
-        names = defs[feat];
-        o = preferences.features[feat];
-
-        if (!o) o = preferences.features[feat] = {};
-
-        for (name in names) {
-            value = names[name];
-
-            if (!o.hasOwnProperty(name)) {
-                o[name] = value;
-                exports.dirty = true;
-            }
-
-        }
-    }
-
-    return exports;
-}
-
-function save() {
-    if (!exports.dirty) return;
-    DataStore.setItem("bes-preferences", JSON.stringify(preferences));
-}
-
-function applyPrefs(prefs) {
-    var feat, key, o;
-
-    for (feat in prefs) {
-        o = prefs[feat];
-        for (key in o) {
-            exports.pref(feat, key, o[key]);
-        }
-    }
-
-    exports.save();
-    return exports;
-}
-
 //End preferences.js
 
 },{"./datastore":19}],25:[function(require,module,exports){
@@ -4384,80 +3933,6 @@ exports.fromBackpack = function (ec, price) {
 
     return {value: ec.convertToBC(val), currency: val.currency};
 };
-var Prefs = require('./preferences'),
-    API = require('./api'),
-    ec, cur;
-
-exports.shared = function (cb) {
-    if (ec) {
-        return cb(ec, cur);
-    }
-
-    exports.ec(function (e, c) {
-        ec = e;
-        cur = c;
-
-        cb(e);
-    });
-};
-
-exports.ec = function (cb) {
-    function inst(currencies) {
-        var e = new EconCC(currencies);
-        e.step = Prefs.pref('pricing', 'step');
-        e.range = Prefs.pref('pricing', 'range');
-        delete e.currencies.earbuds;
-        return e;
-    }
-
-    if (cur) {
-        return cb(inst(cur));
-    }
-
-    API.IGetCurrencies(function (currencies) {
-        if (!cur) {
-            cur = currencies;
-        }
-
-        cb(inst(currencies));
-    });
-};
-
-exports.default = function () {
-    return Prefs.pref('pricing', 'step') === EconCC.Disabled && Prefs.pref('pricing', 'range') === EconCC.Range.Mid;
-};
-
-exports.fromListing = function (ec, price) {
-    if (typeof price !== 'string') return {value: 0, currency: null};
-    var parts = price.split(', '),
-        bc = 0,
-        hv = 0,
-        mainc;
-
-    parts.forEach(function (part) {
-        var p = part.split(' '),
-            price = +p[0],
-            currency = p[1],
-            v = ec.convertToBC(price, currency);
-
-        if (v > hv) {
-            hv = v;
-            mainc = currency;
-        }
-
-        bc += v;
-    });
-
-    return {value: bc, currency: mainc};
-};
-
-exports.fromBackpack = function (ec, price) {
-    if (typeof price !== 'string') return {value: 0, currency: null};
-    var val = ec.parse(price);
-
-    return {value: ec.convertToBC(val), currency: val.currency};
-};
-
 //End pricing.js
 
 },{"./api":2,"./preferences":24}],26:[function(require,module,exports){
@@ -4485,30 +3960,6 @@ exports.GET = function (url, load, args) { exports.VERB(url, load, args || {}, "
 exports.POST = function (url, load, args) { exports.VERB(url, load, args || {}, "POST"); };
 
 exports.uniq = function () { return counter++; };
-var counter = 0;
-
-/* jshint -W061 */
-exports.exec = function (code) {
-    return window.eval(code);
-};
-
-exports.window = unsafeWindow;
-
-exports.xhr = GM_xmlhttpRequest;
-exports.VERB = function (url, load, args, method) {
-    args.method = method;
-    args.url = url;
-    args.onload = function (resp) {
-        load(resp.responseText);
-    };
-    exports.xhr(args);
-};
-
-exports.GET = function (url, load, args) { exports.VERB(url, load, args || {}, "GET"); };
-exports.POST = function (url, load, args) { exports.VERB(url, load, args || {}, "POST"); };
-
-exports.uniq = function () { return counter++; };
-
 //End script.js
 
 },{}]},{},[1]);
