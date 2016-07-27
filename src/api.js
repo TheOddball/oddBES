@@ -96,7 +96,7 @@ exports.init = function () {
         if (!token) return; // :(
         $.ajax({
             method: 'POST',
-            url: "/api/register_do",
+            url: "/api/register",
             data: {url: "backpack.tf", comments: "backpack.tf Enhancement Suite", "user-id": token},
             dataType: 'text'
         }).then(function (body) {
