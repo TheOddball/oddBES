@@ -1,3 +1,4 @@
+//Begin script.js
 var counter = 0;
 
 /* jshint -W061 */
@@ -21,3 +22,4 @@ exports.GET = function (url, load, args) { exports.VERB(url, load, args || {}, "
 exports.POST = function (url, load, args) { exports.VERB(url, load, args || {}, "POST"); };
 
 exports.uniq = function () { return counter++; };
+//End script.js

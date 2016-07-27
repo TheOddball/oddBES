@@ -1,3 +1,4 @@
+//Begin pricing.js
 var Prefs = require('./preferences'),
     API = require('./api'),
     ec, cur;
@@ -71,3 +72,4 @@ exports.fromBackpack = function (ec, price) {
 
     return {value: ec.convertToBC(val), currency: val.currency};
 };
+//End pricing.js

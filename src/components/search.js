@@ -1,3 +1,4 @@
+//Begin search.js
 var Script = require('../script');
 
 // function (rgb) { return ((parseInt(rgb.substr(0, 2), 16) - 45).toString(16) + (parseInt(rgb.substr(2, 2), 16) - 45).toString(16) + (parseInt(rgb.substr(4, 2), 16) - 45).toString(16)).toUpperCase(); }
@@ -203,3 +204,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End search.js

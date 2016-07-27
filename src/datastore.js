@@ -1,3 +1,4 @@
+//Begin datastore.js
 exports.setItem = function (name, value) {
     return GM_setValue(name, value);
 };
@@ -18,3 +19,4 @@ exports.getItem = function (name) {
 exports.removeItem = function (name) {
     return GM_deleteValue(name);
 };
+//End datastore.js

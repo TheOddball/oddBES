@@ -1,3 +1,4 @@
+//Begin menu-actions.js
 var Page = require('./page');
 var actions = [];
 
@@ -31,3 +32,4 @@ exports.applyActions = function () {
 
     actions = [];
 };
+//End menu-actions.js

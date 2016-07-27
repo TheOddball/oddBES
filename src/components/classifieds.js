@@ -1,3 +1,4 @@
+//Begin classifieds.js
 var Page = require('../page'),
     Script = require('../script'),
     Prefs = require('../preferences'),
@@ -109,11 +110,12 @@ function peekload(html) {
 }
 
 function peek(e) {
+    var classiesString = '/classifieds?' + $('.item').data('query_string');
     if (e) e.preventDefault();
 
     $.ajax({
         method: "GET",
-        url: $('.item').data('listing-url'),
+        url: classiesString,
         dataType: "html"
     }).done(peekload);
 }
@@ -202,3 +204,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End classifieds.js

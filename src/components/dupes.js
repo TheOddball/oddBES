@@ -1,3 +1,4 @@
+//Begin dupes.js
 var Script = require('../script'),
     Page = require('../page'),
     MenuActions = require('../menu-actions');
@@ -46,10 +47,6 @@ function addDupeCheck() {
 
 function bpDupeCheck() {
     var items = [];
-
-    if (Page.bp().selectionMode) {
-        return alert("Select the items you want to dupe-check first.");
-    }
 
     $('.item:not(.spacer,.unselected):visible').each(function () {
         var $this = $(this),
@@ -112,3 +109,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End dupes.js

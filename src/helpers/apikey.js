@@ -1,3 +1,4 @@
+//Begin apikey.js
 var DataStore = require('../datastore'),
     Script = require('../script');
 
@@ -56,3 +57,5 @@ Key.prototype.load = function () {
 
 Key.keys = [];
 module.exports = Key;
+
+//End apikey.js

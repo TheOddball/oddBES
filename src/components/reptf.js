@@ -1,3 +1,4 @@
+//Begin reptf.js
 var Script = require('../script'),
     Cache = require('../cache'),
     Page = require('../page');
@@ -170,3 +171,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End reptf.js

@@ -1,3 +1,4 @@
+//Begin changes.js
 var Prefs = require('../preferences'),
     Page = require('../page'),
     Pricing = require('../pricing'),
@@ -176,3 +177,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End changes.js

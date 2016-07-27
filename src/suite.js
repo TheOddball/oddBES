@@ -1,3 +1,4 @@
+//Begin suite.js
 /*!
  * backpack.tf Enhancement Suite - enhancing your backpack.tf experience
  * Made by cares <http://steamcommunity.com/id/caresx>
@@ -80,3 +81,4 @@ Page.addTooltips();
 
 $(document).off('click.bs.button.data-api'); // Fix for bootstrap
 Page.loaded = true;
+//End suite.js

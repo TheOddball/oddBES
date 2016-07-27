@@ -1,3 +1,4 @@
+//Begin pricetags.js
 var Page = require('../page'),
     Prefs = require('../preferences'),
     Pricing = require('../pricing'),
@@ -130,3 +131,5 @@ module.exports = load;
 module.exports.setupInst = setupInst;
 module.exports.applyTagsToItems = applyTagsToItems;
 module.exports.enabled = enabled;
+
+//End pricetags.js

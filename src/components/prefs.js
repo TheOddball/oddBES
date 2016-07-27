@@ -1,3 +1,4 @@
+//Begin prefs.js
 var Prefs = require('../preferences'),
     Page = require('../page'),
     Quicklist = require('./quicklist'),
@@ -6,11 +7,14 @@ var Prefs = require('../preferences'),
     Cache = require('../cache');
 
 function addTab() {
-    $("#settings-tabs").append('<li><a href="#bes">Enhancement Suite</a></li>');
+    $("title").html("Enhancement Suite Settings");
+    $(".panel-heading").html('Enhancement Suite');
+    /* I don't know what this was supposed to do, so I'm commenting it until I
+     * figure it out.
     $('#settings-tabs [href="#bes"]').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
-    });
+    }); */
 }
 
 function addTabContent() {
@@ -240,7 +244,7 @@ function addTabContent() {
         '</div>'
     ].join('');
 
-    $('#settings-panes .tab-content').append(html);
+    $('.panel-body').html(html);
     $('#modify-quicklists').click(Quicklist.modifyQuicklists);
     $('#clear-cache').click(clearCache);
     $('#reset-prefs').click(resetPrefs);
@@ -361,3 +365,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End prefs.js

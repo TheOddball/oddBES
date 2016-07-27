@@ -1,3 +1,4 @@
+//Begin stmapi.js
 var Script = require('./script'),
     Key = require('./helpers/apikey'),
     Queue = require('./helpers/queue');
@@ -84,3 +85,4 @@ exports.available = function () {
 };
 
 exports.interface = exports.I = exports.call = q;
+//End stmapi.js

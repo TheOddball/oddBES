@@ -1,3 +1,4 @@
+//Begin classifieds.js
 var Pricing = require('../../pricing'),
     Page = require('../../page');
 var Search, ec;
@@ -91,3 +92,5 @@ exports.register = function (s) {
     s.hint("Classifieds sell orders",
            "Type c: followed by the name of the item. For fine-grained searches, use the item name,quality,tradable,craftable format like Warmer,unique,+,-");
 };
+
+//End classifieds.js

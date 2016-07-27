@@ -1,3 +1,4 @@
+//Begin improvements.js
 var Prefs = require('../preferences'),
     Script = require('../script'),
     Pricing = require('../pricing'),
@@ -89,8 +90,8 @@ function thirdPartyPrices() {
 }
 
 function global() {
-    var account = $('.navbar-profile-nav .dropdown-menu a[href="/my/account"]'),
-        help = $('.dropdown a[href="/help"]'),
+    var account = $('.navbar-profile-nav .dropdown-menu a[href^="/u/"]'),
+        notify = $('.dropdown a[href="/notifications"]'),
         more = $('.text-more');
 
     if (location.pathname === '/' ||
@@ -100,7 +101,7 @@ function global() {
     }
 
     if (account.length) account.parent().after('<li><a href="/my/preferences"><i class="fa fa-fw fa-cog"></i> My Preferences</a></li>');
-    if (help.length) help.parent().before('<li><a href="/lotto"><i class="fa fa-fw fa-money"></i> Lotto</a></li>');
+    if (notify.length) notify.parent().before('<li><a href="/lotto"><i class="fa fa-fw fa-money"></i> Lotto</a></li>');
     if (more.length) addMorePopovers(more);
 
     $('.navbar-game-select li a').each(function () {
@@ -215,3 +216,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End improvements.js

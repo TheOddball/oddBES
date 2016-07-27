@@ -1,3 +1,4 @@
+//Begin cache.js
 var DataStore = require('./datastore');
 var names = [];
 
@@ -59,3 +60,4 @@ Cache.prototype.prune = function () {
 
 module.exports = Cache;
 module.exports.names = names;
+//End cache.js

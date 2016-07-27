@@ -1,3 +1,4 @@
+//Begin preferences.js
 var DataStore = require('./datastore');
 var preferences = loadFromDS();
 
@@ -94,3 +95,4 @@ function applyPrefs(prefs) {
     exports.save();
     return exports;
 }
+//End preferences.js
