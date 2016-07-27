@@ -1,3 +1,4 @@
+//Begin users.js
 var Page = require('../page');
 
 var BadgeSelfMade = {
@@ -135,3 +136,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End users.js

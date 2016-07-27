@@ -1,3 +1,4 @@
+//Begin unusuals.js
 var Search, unusualPage;
 
 function request(query, scope, search) {
@@ -60,3 +61,5 @@ exports.register = function (s) {
   s.register(["unusuals", "unusual", "u"], { load: request, render: render });
   s.hint("Unusual price indices", "Type u: followed by the name of the item.");
 };
+
+//End unusuals.js

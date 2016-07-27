@@ -1,3 +1,4 @@
+//Begin refresh.js
 var MenuActions = require('../menu-actions');
 var Script = require('../script');
 
@@ -183,3 +184,5 @@ function load() {
 
 module.exports = load;
 
+
+//End refresh.js

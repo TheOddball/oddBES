@@ -1,3 +1,4 @@
+//Begin improvements.js
 var Prefs = require('../preferences'),
     Script = require('../script'),
     Pricing = require('../pricing'),
@@ -215,3 +216,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End improvements.js

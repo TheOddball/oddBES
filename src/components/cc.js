@@ -1,3 +1,4 @@
+//Begin cc.js
 // http://api.fixer.io/latest?base=USD&symbols=EUR,RUB,GBP
 var Cache = require('../cache'),
     Script = require('../script');
@@ -76,3 +77,5 @@ exports.init = function (then) {
         then(inst = new CC(val.value));
     }
 };
+
+//End cc.js

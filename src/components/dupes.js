@@ -1,3 +1,4 @@
+//Begin dupes.js
 var Script = require('../script'),
     Page = require('../page'),
     MenuActions = require('../menu-actions');
@@ -108,3 +109,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End dupes.js

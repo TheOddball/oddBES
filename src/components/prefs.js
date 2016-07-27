@@ -1,3 +1,4 @@
+//Begin prefs.js
 var Prefs = require('../preferences'),
     Page = require('../page'),
     Quicklist = require('./quicklist'),
@@ -364,3 +365,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End prefs.js

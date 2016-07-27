@@ -1,3 +1,4 @@
+//Begin classifieds.js
 var Page = require('../page'),
     Script = require('../script'),
     Prefs = require('../preferences'),
@@ -203,3 +204,5 @@ function load() {
 }
 
 module.exports = load;
+
+//End classifieds.js

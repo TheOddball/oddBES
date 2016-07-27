@@ -1,3 +1,4 @@
+//Begin quicklist.js
 var Page = require('../page'),
     Script = require('../script'),
     DataStore = require('../datastore');
@@ -493,3 +494,5 @@ module.exports = load;
 module.exports.modifyQuicklists = modifyQuicklists;
 
 
+
+//End quicklist.js

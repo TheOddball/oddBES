@@ -1,3 +1,4 @@
+//Begin queue.js
 function Queue() {
     this.queue = [];
     this.busy = false;
@@ -34,3 +35,5 @@ Queue.prototype.done = function () {
 };
 
 module.exports = Queue;
+
+//End queue.js

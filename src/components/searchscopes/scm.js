@@ -1,3 +1,4 @@
+//Begin scm.js
 var Pricing = require('../../pricing'),
     CC = require('../cc'),
     Page = require('../../page');
@@ -159,3 +160,5 @@ exports.register = function (s) {
     s.register(names, {load: requestQuery, render: parseQuery});
     s.hint("SCM Item Prices", "Type scm:, tf:, cs:, or dt: followed by the name of the item.");
 };
+
+//End scm.js
