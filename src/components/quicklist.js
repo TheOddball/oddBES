@@ -150,9 +150,9 @@ function listSelection(value) {
     items = [],
     at = 0;
 
-    clearSelection();
+    Page.inventory().updateClearSelectionState();
+    Page.inventory().clearSelection();
     updateSelectQuicklist();
-    updateClearSelectionState();
 
     selection.each(function () {
         var $this = $(this);
@@ -225,85 +225,6 @@ function copyButtonValues(value, elem) {
     }
 }
 
-function disableSelectionMode() {
-    inventory.selectionMode = false;
-    ITEM_POPOVERS_DISABLED = false;
-};
-
-function updateValues() {
-    var li,
-    totalkeys = 0,
-    totalmetal = 0,
-    curvalue = 0,
-    marketvalue = 0,
-    totalitems = 0;
-
-    if (inventory.selectionMode) {
-        li = $('.item:not(.spacer,.unselected):visible');
-    } else {
-        li = $('.item:not(.spacer):visible');
-    }
-
-    li.each(function () {
-        // only count items
-        totalitems++;
-        curvalue = curvalue + parseFloat($(this).data('price'));
-
-        if ($(this).data('market-p') && $(this).data('market-p') != -1) {
-            marketvalue += $(this).data('market-p');
-        }
-
-        if ($(this).data('app') == 440) {
-            switch ($(this).data('defindex')) {
-                case 5000:
-                    totalmetal += 0.111111;
-                    break;
-
-                case 5001:
-                    totalmetal += 0.333333;
-                    break;
-
-                case 5002:
-                    totalmetal++;
-                    break;
-            }
-        }
-
-        if ($(this).data('is-key')) {
-            totalkeys++;
-        }
-    });
-
-    if (totalmetal % 1 >= 0.9) {
-        // If it's x.99, round up
-        totalmetal = Math.round(totalmetal);
-    }
-
-    $('#keycount').html(totalkeys.format());
-    $('#metalcount').html((Math.floor(totalmetal * 100) / 100).toFixed(2));
-    $('#refinedvalue').html(Math.round(curvalue).format());
-    $('#dollarvalue').html(Math.round(curvalue * rawValue).format());
-    $('#marketvalue').html(Math.round(marketvalue / 100).format());
-    $('#totalitems').html(totalitems.format());
-};
-
-function clearSelection() {
-    if (inventory.selectionMode) {
-        Page.selectItem($('.item'));
-        disableSelectionMode();
-        updateValues();
-        updateClearSelectionState();
-    }
-};
-
-function updateClearSelectionState() {
-    if (inventory.selectionMode) {
-        $('#clear-selection').removeClass('disabled');
-    } else {
-        $('#clear-selection').addClass('disabled');
-    }
-};
-
 function modifyQuicklists() {
     var html =
         "<p>Add, edit, and remove quicklist presets here. Metal can have two decimals, keys must be integers (no decimals). If any value is missing, it is defaulted to 0, with the exception of the message, which then is empty.</p>" +
@@ -341,8 +262,7 @@ function addSelectPage() {
         inventory.selectionMode = true;
         Page.selectItem(items);
 
-        updateClearSelectionState();
-        updateValues();
+        Page.inventory().updateClearSelectionState();
         updateSelectQuicklist();
     }
 
@@ -356,9 +276,8 @@ function addSelectPage() {
                 Page.unselectItem(pageitems);
 
                 if ($('.item:not(.unselected)').length === 0) {
-                    clearSelection();
+                    Page.inventory().clearSelection();
                     updateSelectQuicklist();
-                    updateValues();
                     return;
                 }
             } else {
@@ -428,7 +347,7 @@ function addItemShiftClick() {
             Page.selectItem($this);
             $last = $this;
 
-            updateClearSelectionState();
+            Page.inventory().updateClearSelectionState();
         } else {
             if ($this.hasClass('unselected')) {
                 if (e.shiftKey && $last && $last.not('.unselected') && ($lidx = $i.index($last)) !== -1) {
@@ -454,19 +373,17 @@ function addItemShiftClick() {
                 if ($('.item:not(.unselected)').length === 0) {
                     inventory.selectionMode = false;
                     Page.selectItem($('.item'));
-                    updateClearSelectionState();
-                    updateValues();
+                    Page.inventory().updateClearSelectionState();
                 }
             }
         }
 
         $('#clear-selection').click(function () {
             if (!$(this).hasClass('disabled')) {
-                disableSelectionMode();
+                Page.inventory().disableSelectionMode();
             }
         });
 
-        updateValues();
     });
 }
 

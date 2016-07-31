@@ -218,9 +218,6 @@ function addTabContent() {
         section('Other', [
             help("Preferences that don't deserve their own section."),
 
-            buttonsyn('Show lotto', 'lotto', 'show'),
-            help("Shows or hides the lotto on the main page. It can still be viewed at <a href='/lotto'>backpack.tf/lotto</a>."),
-
             buttonsyn('Use original key icons', 'other', 'originalkeys'),
             help("Shows the original key's icon (for converted event keys) full size."),
 

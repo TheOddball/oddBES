@@ -388,7 +388,8 @@ exports.hideModal = function () {
     $("#active-modal, .modal-backdrop").remove();
 };
 
-exports.bp = function () { return Script.window.backpack; };
+exports.inventory = function () { return Script.window.inventory; };
+exports.invprototype = function () { return Script.window.Inventory.prototype; };
 exports.selectItem = function (e) { e.removeClass('unselected'); };
 exports.unselectItem = function (e) { e.addClass('unselected'); };
 

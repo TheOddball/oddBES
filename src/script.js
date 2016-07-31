@@ -1,4 +1,9 @@
 //Begin script.js
+if (navigator.userAgent.indexOf('AppleWebKit') != -1)  {
+  // Chrome support for unsafeWindow (used for overriding native functions)
+  window.unsafeWindow || (unsafeWindow = (function() { var el = document.createElement('p'); el.setAttribute('onclick', 'return window;'); return el.onclick(); }()) );
+}
+
 var counter = 0;
 
 /* jshint -W061 */
