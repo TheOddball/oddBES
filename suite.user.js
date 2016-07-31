@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.8.3
+// @version      2.0
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -18,92 +18,6 @@
 */
 
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-//Begin suite.js
-/*!
- * backpack.tf Enhancement Suite - enhancing your backpack.tf experience
- * Made by cares <http://steamcommunity.com/id/caresx>
- *
- * Post feedback + view instuctions:
-   http://forums.backpack.tf/index.php?/topic/36130-backpacktf-enhancement-suite/
- * Browse the source code: https://github.com/caresx/backpacktf-enhancement-suite
- * Changelog:
-   https://github.com/caresx/backpacktf-enhancement-suite/blob/gh-pages/CHANGELOG.md
- *
- * Edit your preferences: http://backpack.tf/my/preferences##bes
- */
-
-var Prefs = require('./preferences'),
-    Page = require('./page');
-
-// Ignore non-html pages
-if (!document.getElementById("helpers")) return;
-
-Page.init();
-require('./api').init();
-
-Prefs.defaults({
-    lotto: {show: true},
-    notifications: {updatecount: 'click'},
-    pricetags: {
-        modmult: 0.5,
-        tooltips: true
-    },
-    changes: {
-        enabled: true,
-        outdatedwarn: true,
-        period: 1000 * 60 * 60 * 24 // 1d
-    },
-    pricing: {
-        step: EconCC.Disabled,
-        range: EconCC.Range.Mid
-    },
-    classifieds: {
-        signature: '',
-        'signature-buy': '',
-        autoclose: true,
-        autopeek: false,
-        autofill: 'default'
-    },
-    homebg: {
-        image: '',
-        repeat: 'no-repeat',
-        posy: 'top',
-        posx: 'center',
-        attachment: 'fixed',
-        sizing: 'cover',
-        replacewalls: true
-    },
-    other: {
-        originalkeys: false,
-        thirdpartyprices: true
-    }
-});
-
-function exec(mod) {
-    mod();
-    mod.initialized = true;
-}
-
-exec(require('./components/improvements'));
-exec(require('./components/reptf'));
-exec(require('./components/quicklist')); // prefs checked inside main
-exec(require('./components/pricetags'));
-if (Prefs.enabled('changes')) exec(require('./components/changes'));
-exec(require('./components/refresh'));
-exec(require('./components/classifieds'));
-exec(require('./components/prefs'));
-exec(require('./components/search'));
-exec(require('./components/dupes'));
-exec(require('./components/users'));
-
-require('./menu-actions').applyActions();
-Page.addTooltips();
-
-$(document).off('click.bs.button.data-api'); // Fix for bootstrap
-Page.loaded = true;
-//End suite.js
-
-},{"./api":2,"./components/changes":5,"./components/classifieds":6,"./components/dupes":7,"./components/improvements":8,"./components/prefs":9,"./components/pricetags":10,"./components/quicklist":11,"./components/refresh":12,"./components/reptf":13,"./components/search":14,"./components/users":18,"./menu-actions":22,"./page":23,"./preferences":24}],2:[function(require,module,exports){
 //Begin api.js
 var Page = require('./page'),
     Key = require('./helpers/apikey'),
@@ -260,7 +174,7 @@ exports.IGetUserListings = function (steamid, callback, args) {
 };
 //End api.js
 
-},{"./cache":3,"./helpers/apikey":20,"./helpers/queue":21,"./page":23}],3:[function(require,module,exports){
+},{"./cache":2,"./helpers/apikey":19,"./helpers/queue":20,"./page":22}],2:[function(require,module,exports){
 //Begin cache.js
 var DataStore = require('./datastore');
 var names = [];
@@ -325,7 +239,7 @@ module.exports = Cache;
 module.exports.names = names;
 //End cache.js
 
-},{"./datastore":19}],4:[function(require,module,exports){
+},{"./datastore":18}],3:[function(require,module,exports){
 //Begin cc.js
 // http://api.fixer.io/latest?base=USD&symbols=EUR,RUB,GBP
 var Cache = require('../cache'),
@@ -408,7 +322,7 @@ exports.init = function (then) {
 
 //End cc.js
 
-},{"../cache":3,"../script":26}],5:[function(require,module,exports){
+},{"../cache":2,"../script":25}],4:[function(require,module,exports){
 //Begin changes.js
 var Prefs = require('../preferences'),
     Page = require('../page'),
@@ -591,7 +505,7 @@ module.exports = load;
 
 //End changes.js
 
-},{"../api":2,"../menu-actions":22,"../page":23,"../preferences":24,"../pricing":25}],6:[function(require,module,exports){
+},{"../api":1,"../menu-actions":21,"../page":22,"../preferences":23,"../pricing":24}],5:[function(require,module,exports){
 //Begin classifieds.js
 var Page = require('../page'),
     Script = require('../script'),
@@ -616,6 +530,90 @@ function addRemoveAllListings() {
         }
     });
 }
+
+//This part written by: https://gist.github.com/LeonEuler/bc0abf8aa63ddeb28f25 I felt it was good to put in here. Thank you :)
+function checkEscrowStuff() {
+    var escrowStatusByTradeOfferUrl = {};
+
+
+    function scanForTradeOfferLinks() {
+        //find all hyperlinks that start with a trade offer pattern
+        offerLinks = jQuery('a[href^="https://steamcommunity.com/tradeoffer/new/"]');
+        //trade.tf uses a redirection thing. Add on links, checking for startswith "/user..." and endswith "/offer"
+        jQuery.merge(offerLinks, jQuery('a[href^="/user/mybot/trades/"][href$="/offer"]'));
+        for (var i = 0; i < offerLinks.length; i++) {
+            var link = jQuery(offerLinks[i]);
+            var offerUrl = link.attr("href");
+
+            //check if url was already checked or is currently being checked (avoid ajax spam)
+            if (escrowStatusByTradeOfferUrl[offerUrl] === "escrow") {
+                //mark link as fucked
+                link.css('background-color', '#C84B43');
+                link.css('border-color', '#C84B43');
+                link.css('background-image', 'none');//to remove gradient on trade.tf offer button.
+                continue;
+            }
+            else if (escrowStatusByTradeOfferUrl[offerUrl] === "ok") {
+                //new approved elite master race trader
+                //leave link as-is
+                continue;
+            }
+            else if (escrowStatusByTradeOfferUrl[offerUrl] === "pending") {
+                //we're still waiting on a request
+                continue;
+            }
+
+            //link not found in map; never seen this link yet.
+            escrowStatusByTradeOfferUrl[offerUrl] = "pending";
+            //Doing this via helper function to make sure url loop variable doesn't cause scope conflict
+            checkTradeOfferPage(offerUrl);
+        }
+    }
+
+    function checkTradeOfferPage(offerUrl, trueOfferUrl) {
+        var requestUrl = trueOfferUrl ? trueOfferUrl : offerUrl;
+        //make cross site ajax request with tampermonkey/greasemonkey
+        GM_xmlhttpRequest({
+            method: "GET",
+            url: requestUrl,
+            onload: function (responseData) {
+
+                //Check for trade.tf redirection page, with its javascript that does a window.location redirect.
+                var redirectionMatches = responseData.responseText.match(/window\.location\.href = "(https:\/\/steamcommunity\.com\/tradeoffer\/new\/[^"]+)";/);
+                if (redirectionMatches && redirectionMatches.length === 2)//(first is whole match, 2nd is url)
+                {
+                    //pass discovered url to 1 recursive call
+                    checkTradeOfferPage(offerUrl, redirectionMatches[1]);
+                    return;
+                }
+
+                if (responseData.responseText.indexOf("var g_daysTheirEscrow = ") !== -1
+                        && responseData.responseText.indexOf("var g_daysTheirEscrow = 0") === -1) {
+                    escrowStatusByTradeOfferUrl[offerUrl] = "escrow";
+                }
+                else {
+                    escrowStatusByTradeOfferUrl[offerUrl] = "ok";
+                }
+            }
+        });
+        //status result will take effect in next link scan
+    }
+
+    if (document.location.host === "steamcommunity.com") {
+        //On a trade offer creation page itself.
+        if (unsafeWindow.g_daysTheirEscrow !== 0) {
+            //Mark background fucked 
+            jQuery('.responsive_page_template_content').css("background-color", "darkred");
+        }
+    }
+    else {
+        //On a trading site.
+        //Run repeatedly to keep scanning and changing links
+        window.setInterval(scanForTradeOfferLinks, 500);
+    }
+}
+
+//Thank you for letting me use this :)
 
 function autofillLowest(clones, auto) {
     var metal = $("#metal"),
@@ -790,6 +788,7 @@ function global() {
 
 function load() {
     var pathname = location.pathname;
+        checkEscrowStuff();
 
          if (/^\/classifieds\/buy\/.{1,}\/.{1,}\/.{1,}\/.{1,}\/?.*/.test(pathname)) buy();
     else if (/^\/classifieds\/relist\/.{1,}/.test(pathname)) buy();
@@ -801,7 +800,7 @@ module.exports = load;
 
 //End classifieds.js
 
-},{"../menu-actions":22,"../page":23,"../preferences":24,"../pricing":25,"../script":26,"./pricetags":10}],7:[function(require,module,exports){
+},{"../menu-actions":21,"../page":22,"../preferences":23,"../pricing":24,"../script":25,"./pricetags":9}],6:[function(require,module,exports){
 //Begin dupes.js
 var Script = require('../script'),
     Page = require('../page'),
@@ -916,7 +915,7 @@ module.exports = load;
 
 //End dupes.js
 
-},{"../menu-actions":22,"../page":23,"../script":26}],8:[function(require,module,exports){
+},{"../menu-actions":21,"../page":22,"../script":25}],7:[function(require,module,exports){
 //Begin improvements.js
 var Prefs = require('../preferences'),
     Script = require('../script'),
@@ -1020,7 +1019,6 @@ function global() {
     }
 
     if (account.length) account.parent().after('<li><a href="/my/preferences"><i class="fa fa-fw fa-cog"></i> My Preferences</a></li>');
-    if (notify.length) notify.parent().before('<li><a href="/lotto"><i class="fa fa-fw fa-money"></i> Lotto</a></li>');
     if (more.length) addMorePopovers(more);
 
     $('.navbar-game-select li a').each(function () {
@@ -1138,7 +1136,7 @@ module.exports = load;
 
 //End improvements.js
 
-},{"../cache":3,"../page":23,"../preferences":24,"../pricing":25,"../script":26}],9:[function(require,module,exports){
+},{"../cache":2,"../page":22,"../preferences":23,"../pricing":24,"../script":25}],8:[function(require,module,exports){
 //Begin prefs.js
 var Prefs = require('../preferences'),
     Page = require('../page'),
@@ -1359,9 +1357,6 @@ function addTabContent() {
         section('Other', [
             help("Preferences that don't deserve their own section."),
 
-            buttonsyn('Show lotto', 'lotto', 'show'),
-            help("Shows or hides the lotto on the main page. It can still be viewed at <a href='/lotto'>backpack.tf/lotto</a>."),
-
             buttonsyn('Use original key icons', 'other', 'originalkeys'),
             help("Shows the original key's icon (for converted event keys) full size."),
 
@@ -1509,7 +1504,7 @@ module.exports = load;
 
 //End prefs.js
 
-},{"../cache":3,"../datastore":19,"../helpers/apikey":20,"../page":23,"../preferences":24,"./quicklist":11}],10:[function(require,module,exports){
+},{"../cache":2,"../datastore":18,"../helpers/apikey":19,"../page":22,"../preferences":23,"./quicklist":10}],9:[function(require,module,exports){
 //Begin pricetags.js
 var Page = require('../page'),
     Prefs = require('../preferences'),
@@ -1646,7 +1641,7 @@ module.exports.enabled = enabled;
 
 //End pricetags.js
 
-},{"../page":23,"../preferences":24,"../pricing":25,"../script":26}],11:[function(require,module,exports){
+},{"../page":22,"../preferences":23,"../pricing":24,"../script":25}],10:[function(require,module,exports){
 //Begin quicklist.js
 var Page = require('../page'),
     Script = require('../script'),
@@ -1799,9 +1794,9 @@ function listSelection(value) {
     items = [],
     at = 0;
 
-    clearSelection();
+    Page.inventory().updateClearSelectionState();
+    Page.inventory().clearSelection();
     updateSelectQuicklist();
-    updateClearSelectionState();
 
     selection.each(function () {
         var $this = $(this);
@@ -1874,85 +1869,6 @@ function copyButtonValues(value, elem) {
     }
 }
 
-function disableSelectionMode() {
-    inventory.selectionMode = false;
-    ITEM_POPOVERS_DISABLED = false;
-};
-
-function updateValues() {
-    var li,
-    totalkeys = 0,
-    totalmetal = 0,
-    curvalue = 0,
-    marketvalue = 0,
-    totalitems = 0;
-
-    if (inventory.selectionMode) {
-        li = $('.item:not(.spacer,.unselected):visible');
-    } else {
-        li = $('.item:not(.spacer):visible');
-    }
-
-    li.each(function () {
-        // only count items
-        totalitems++;
-        curvalue = curvalue + parseFloat($(this).data('price'));
-
-        if ($(this).data('market-p') && $(this).data('market-p') != -1) {
-            marketvalue += $(this).data('market-p');
-        }
-
-        if ($(this).data('app') == 440) {
-            switch ($(this).data('defindex')) {
-                case 5000:
-                    totalmetal += 0.111111;
-                    break;
-
-                case 5001:
-                    totalmetal += 0.333333;
-                    break;
-
-                case 5002:
-                    totalmetal++;
-                    break;
-            }
-        }
-
-        if ($(this).data('is-key')) {
-            totalkeys++;
-        }
-    });
-
-    if (totalmetal % 1 >= 0.9) {
-        // If it's x.99, round up
-        totalmetal = Math.round(totalmetal);
-    }
-
-    $('#keycount').html(totalkeys.format());
-    $('#metalcount').html((Math.floor(totalmetal * 100) / 100).toFixed(2));
-    $('#refinedvalue').html(Math.round(curvalue).format());
-    $('#dollarvalue').html(Math.round(curvalue * rawValue).format());
-    $('#marketvalue').html(Math.round(marketvalue / 100).format());
-    $('#totalitems').html(totalitems.format());
-};
-
-function clearSelection() {
-    if (inventory.selectionMode) {
-        Page.selectItem($('.item'));
-        disableSelectionMode();
-        updateValues();
-        updateClearSelectionState();
-    }
-};
-
-function updateClearSelectionState() {
-    if (inventory.selectionMode) {
-        $('#clear-selection').removeClass('disabled');
-    } else {
-        $('#clear-selection').addClass('disabled');
-    }
-};
-
 function modifyQuicklists() {
     var html =
         "<p>Add, edit, and remove quicklist presets here. Metal can have two decimals, keys must be integers (no decimals). If any value is missing, it is defaulted to 0, with the exception of the message, which then is empty.</p>" +
@@ -1990,8 +1906,8 @@ function addSelectPage() {
         inventory.selectionMode = true;
         Page.selectItem(items);
 
-        updateClearSelectionState();
-        updateValues();
+        Page.inventory().updateClearSelectionState();
+        Page.inventory().updateValues();
         updateSelectQuicklist();
     }
 
@@ -2005,9 +1921,9 @@ function addSelectPage() {
                 Page.unselectItem(pageitems);
 
                 if ($('.item:not(.unselected)').length === 0) {
-                    clearSelection();
+                    Page.inventory().clearSelection();
                     updateSelectQuicklist();
-                    updateValues();
+                    Page.inventory().updateValues();
                     return;
                 }
             } else {
@@ -2077,7 +1993,7 @@ function addItemShiftClick() {
             Page.selectItem($this);
             $last = $this;
 
-            updateClearSelectionState();
+            Page.inventory().updateClearSelectionState();
         } else {
             if ($this.hasClass('unselected')) {
                 if (e.shiftKey && $last && $last.not('.unselected') && ($lidx = $i.index($last)) !== -1) {
@@ -2103,19 +2019,19 @@ function addItemShiftClick() {
                 if ($('.item:not(.unselected)').length === 0) {
                     inventory.selectionMode = false;
                     Page.selectItem($('.item'));
-                    updateClearSelectionState();
-                    updateValues();
+                    Page.inventory().updateClearSelectionState();
+                    Page.inventory().updateValues();
                 }
             }
         }
 
         $('#clear-selection').click(function () {
             if (!$(this).hasClass('disabled')) {
-                disableSelectionMode();
+                Page.inventory().disableSelectionMode();
             }
         });
 
-        updateValues();
+        Page.inventory().updateValues();
     });
 }
 
@@ -2143,7 +2059,7 @@ module.exports.modifyQuicklists = modifyQuicklists;
 
 //End quicklist.js
 
-},{"../datastore":19,"../page":23,"../script":26}],12:[function(require,module,exports){
+},{"../datastore":18,"../page":22,"../script":25}],11:[function(require,module,exports){
 //Begin refresh.js
 var MenuActions = require('../menu-actions');
 var Script = require('../script');
@@ -2162,89 +2078,6 @@ function addRefreshButtons() {
 
     listings = !!$('.listing-refreshbp').length;
 }
-//This part written by: https://gist.github.com/LeonEuler/bc0abf8aa63ddeb28f25 I felt it was good to put in here. Thank you :)
-function checkEscrowStuff() {
-    var escrowStatusByTradeOfferUrl = {};
-
-
-    function scanForTradeOfferLinks() {
-        //find all hyperlinks that start with a trade offer pattern
-        offerLinks = jQuery('a[href^="https://steamcommunity.com/tradeoffer/new/"]');
-        //trade.tf uses a redirection thing. Add on links, checking for startswith "/user..." and endswith "/offer"
-        jQuery.merge(offerLinks, jQuery('a[href^="/user/mybot/trades/"][href$="/offer"]'));
-        for (var i = 0; i < offerLinks.length; i++) {
-            var link = jQuery(offerLinks[i]);
-            var offerUrl = link.attr("href");
-
-            //check if url was already checked or is currently being checked (avoid ajax spam)
-            if (escrowStatusByTradeOfferUrl[offerUrl] === "escrow") {
-                //mark link as fucked
-                link.css('background-color', '#C84B43');
-                link.css('border-color', '#C84B43');
-                link.css('background-image', 'none');//to remove gradient on trade.tf offer button.
-                continue;
-            }
-            else if (escrowStatusByTradeOfferUrl[offerUrl] === "ok") {
-                //new approved elite master race trader
-                //leave link as-is
-                continue;
-            }
-            else if (escrowStatusByTradeOfferUrl[offerUrl] === "pending") {
-                //we're still waiting on a request
-                continue;
-            }
-
-            //link not found in map; never seen this link yet.
-            escrowStatusByTradeOfferUrl[offerUrl] = "pending";
-            //Doing this via helper function to make sure url loop variable doesn't cause scope conflict
-            checkTradeOfferPage(offerUrl);
-        }
-    }
-
-    function checkTradeOfferPage(offerUrl, trueOfferUrl) {
-        var requestUrl = trueOfferUrl ? trueOfferUrl : offerUrl;
-        //make cross site ajax request with tampermonkey/greasemonkey
-        GM_xmlhttpRequest({
-            method: "GET",
-            url: requestUrl,
-            onload: function (responseData) {
-
-                //Check for trade.tf redirection page, with its javascript that does a window.location redirect.
-                var redirectionMatches = responseData.responseText.match(/window\.location\.href = "(https:\/\/steamcommunity\.com\/tradeoffer\/new\/[^"]+)";/);
-                if (redirectionMatches && redirectionMatches.length === 2)//(first is whole match, 2nd is url)
-                {
-                    //pass discovered url to 1 recursive call
-                    checkTradeOfferPage(offerUrl, redirectionMatches[1]);
-                    return;
-                }
-
-                if (responseData.responseText.indexOf("var g_daysTheirEscrow = ") !== -1
-                        && responseData.responseText.indexOf("var g_daysTheirEscrow = 0") === -1) {
-                    escrowStatusByTradeOfferUrl[offerUrl] = "escrow";
-                }
-                else {
-                    escrowStatusByTradeOfferUrl[offerUrl] = "ok";
-                }
-            }
-        });
-        //status result will take effect in next link scan
-    }
-
-    if (document.location.host === "steamcommunity.com") {
-        //On a trade offer creation page itself.
-        if (unsafeWindow.g_daysTheirEscrow !== 0) {
-            //Mark background fucked 
-            jQuery('.responsive_page_template_content').css("background-color", "darkred");
-        }
-    }
-    else {
-        //On a trading site.
-        //Run repeatedly to keep scanning and changing links
-        window.setInterval(scanForTradeOfferLinks, 500);
-    }
-}
-
-//Thank you for letting me use this :)
 
 function addButtonTooltips() {
     Script.exec("$('.listing-refreshbp').tooltip({placement: get_tooltip_placement, animation: false});");
@@ -2318,7 +2151,6 @@ function addRallHeader() {
 
 function load() {
     addRefreshButtons();
-    checkEscrowStuff();
 
     if (!listings) return;
 
@@ -2333,7 +2165,7 @@ module.exports = load;
 
 //End refresh.js
 
-},{"../menu-actions":22,"../script":26}],13:[function(require,module,exports){
+},{"../menu-actions":21,"../script":25}],12:[function(require,module,exports){
 //Begin reptf.js
 var Script = require('../script'),
     Cache = require('../cache'),
@@ -2510,7 +2342,7 @@ module.exports = load;
 
 //End reptf.js
 
-},{"../cache":3,"../page":23,"../script":26}],14:[function(require,module,exports){
+},{"../cache":2,"../page":22,"../script":25}],13:[function(require,module,exports){
 //Begin search.js
 var Script = require('../script');
 
@@ -2720,7 +2552,7 @@ module.exports = load;
 
 //End search.js
 
-},{"../script":26,"./searchscopes/classifieds":15,"./searchscopes/scm":16,"./searchscopes/unusuals":17}],15:[function(require,module,exports){
+},{"../script":25,"./searchscopes/classifieds":14,"./searchscopes/scm":15,"./searchscopes/unusuals":16}],14:[function(require,module,exports){
 //Begin classifieds.js
 var Pricing = require('../../pricing'),
     Page = require('../../page');
@@ -2818,7 +2650,7 @@ exports.register = function (s) {
 
 //End classifieds.js
 
-},{"../../page":23,"../../pricing":25}],16:[function(require,module,exports){
+},{"../../page":22,"../../pricing":24}],15:[function(require,module,exports){
 //Begin scm.js
 var Pricing = require('../../pricing'),
     CC = require('../cc'),
@@ -2984,7 +2816,7 @@ exports.register = function (s) {
 
 //End scm.js
 
-},{"../../page":23,"../../pricing":25,"../cc":4}],17:[function(require,module,exports){
+},{"../../page":22,"../../pricing":24,"../cc":3}],16:[function(require,module,exports){
 //Begin unusuals.js
 var Search, unusualPage;
 
@@ -3051,7 +2883,7 @@ exports.register = function (s) {
 
 //End unusuals.js
 
-},{}],18:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 //Begin users.js
 var Page = require('../page');
 
@@ -3193,7 +3025,7 @@ module.exports = load;
 
 //End users.js
 
-},{"../page":23}],19:[function(require,module,exports){
+},{"../page":22}],18:[function(require,module,exports){
 //Begin datastore.js
 exports.setItem = function (name, value) {
     return GM_setValue(name, value);
@@ -3217,7 +3049,7 @@ exports.removeItem = function (name) {
 };
 //End datastore.js
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 //Begin apikey.js
 var DataStore = require('../datastore'),
     Script = require('../script');
@@ -3280,7 +3112,7 @@ module.exports = Key;
 
 //End apikey.js
 
-},{"../datastore":19,"../script":26}],21:[function(require,module,exports){
+},{"../datastore":18,"../script":25}],20:[function(require,module,exports){
 //Begin queue.js
 function Queue() {
     this.queue = [];
@@ -3321,7 +3153,7 @@ module.exports = Queue;
 
 //End queue.js
 
-},{}],22:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 //Begin menu-actions.js
 var Page = require('./page');
 var actions = [];
@@ -3358,7 +3190,7 @@ exports.applyActions = function () {
 };
 //End menu-actions.js
 
-},{"./page":23}],23:[function(require,module,exports){
+},{"./page":22}],22:[function(require,module,exports){
 //Begin page.js
 var Script = require('./script');
 
@@ -3749,13 +3581,14 @@ exports.hideModal = function () {
     $("#active-modal, .modal-backdrop").remove();
 };
 
-exports.bp = function () { return Script.window.backpack; };
+exports.inventory = function () { return Script.window.inventory; };
+exports.invprototype = function () { return Script.window.Inventory.prototype; };
 exports.selectItem = function (e) { e.removeClass('unselected'); };
 exports.unselectItem = function (e) { e.addClass('unselected'); };
 
 //End page.js
 
-},{"./script":26}],24:[function(require,module,exports){
+},{"./script":25}],23:[function(require,module,exports){
 //Begin preferences.js
 var DataStore = require('./datastore');
 var preferences = loadFromDS();
@@ -3855,7 +3688,7 @@ function applyPrefs(prefs) {
 }
 //End preferences.js
 
-},{"./datastore":19}],25:[function(require,module,exports){
+},{"./datastore":18}],24:[function(require,module,exports){
 //Begin pricing.js
 var Prefs = require('./preferences'),
     API = require('./api'),
@@ -3932,8 +3765,13 @@ exports.fromBackpack = function (ec, price) {
 };
 //End pricing.js
 
-},{"./api":2,"./preferences":24}],26:[function(require,module,exports){
+},{"./api":1,"./preferences":23}],25:[function(require,module,exports){
 //Begin script.js
+if (navigator.userAgent.indexOf('AppleWebKit') != -1)  {
+  // Chrome support for unsafeWindow (used for overriding native functions)
+  window.unsafeWindow || (unsafeWindow = (function() { var el = document.createElement('p'); el.setAttribute('onclick', 'return window;'); return el.onclick(); }()) );
+}
+
 var counter = 0;
 
 /* jshint -W061 */
@@ -3959,4 +3797,90 @@ exports.POST = function (url, load, args) { exports.VERB(url, load, args || {}, 
 exports.uniq = function () { return counter++; };
 //End script.js
 
-},{}]},{},[1]);
+},{}],26:[function(require,module,exports){
+//Begin suite.js
+/*!
+ * backpack.tf Enhancement Suite - enhancing your backpack.tf experience
+ * Made by cares <http://steamcommunity.com/id/caresx>
+ *
+ * Post feedback + view instuctions:
+   http://forums.backpack.tf/index.php?/topic/36130-backpacktf-enhancement-suite/
+ * Browse the source code: https://github.com/caresx/backpacktf-enhancement-suite
+ * Changelog:
+   https://github.com/caresx/backpacktf-enhancement-suite/blob/gh-pages/CHANGELOG.md
+ *
+ * Edit your preferences: http://backpack.tf/my/preferences##bes
+ */
+
+var Prefs = require('./preferences'),
+    Page = require('./page');
+
+// Ignore non-html pages
+if (!document.getElementById("helpers")) return;
+
+Page.init();
+require('./api').init();
+
+Prefs.defaults({
+    lotto: {show: true},
+    notifications: {updatecount: 'click'},
+    pricetags: {
+        modmult: 0.5,
+        tooltips: true
+    },
+    changes: {
+        enabled: true,
+        outdatedwarn: true,
+        period: 1000 * 60 * 60 * 24 // 1d
+    },
+    pricing: {
+        step: EconCC.Disabled,
+        range: EconCC.Range.Mid
+    },
+    classifieds: {
+        signature: '',
+        'signature-buy': '',
+        autoclose: true,
+        autopeek: false,
+        autofill: 'default'
+    },
+    homebg: {
+        image: '',
+        repeat: 'no-repeat',
+        posy: 'top',
+        posx: 'center',
+        attachment: 'fixed',
+        sizing: 'cover',
+        replacewalls: true
+    },
+    other: {
+        originalkeys: false,
+        thirdpartyprices: true
+    }
+});
+
+function exec(mod) {
+    mod();
+    mod.initialized = true;
+}
+
+exec(require('./components/improvements'));
+exec(require('./components/reptf'));
+exec(require('./components/quicklist')); // prefs checked inside main
+exec(require('./components/pricetags'));
+if (Prefs.enabled('changes')) exec(require('./components/changes'));
+exec(require('./components/refresh'));
+exec(require('./components/classifieds'));
+exec(require('./components/prefs'));
+exec(require('./components/search'));
+exec(require('./components/dupes'));
+exec(require('./components/users'));
+
+require('./menu-actions').applyActions();
+Page.addTooltips();
+
+$(document).off('click.bs.button.data-api'); // Fix for bootstrap
+Page.loaded = true;
+//End suite.js
+
+},{"./api":1,"./components/changes":4,"./components/classifieds":5,"./components/dupes":6,"./components/improvements":7,"./components/prefs":8,"./components/pricetags":9,"./components/quicklist":10,"./components/refresh":11,"./components/reptf":12,"./components/search":13,"./components/users":17,"./menu-actions":21,"./page":22,"./preferences":23}]},{},[26]);

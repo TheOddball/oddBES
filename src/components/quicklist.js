@@ -263,6 +263,7 @@ function addSelectPage() {
         Page.selectItem(items);
 
         Page.inventory().updateClearSelectionState();
+        Page.invprototype().updateValues();
         updateSelectQuicklist();
     }
 
@@ -278,6 +279,7 @@ function addSelectPage() {
                 if ($('.item:not(.unselected)').length === 0) {
                     Page.inventory().clearSelection();
                     updateSelectQuicklist();
+                    Page.invprototype().updateValues();
                     return;
                 }
             } else {
@@ -374,6 +376,7 @@ function addItemShiftClick() {
                     inventory.selectionMode = false;
                     Page.selectItem($('.item'));
                     Page.inventory().updateClearSelectionState();
+                    Page.invprototype().updateValues();
                 }
             }
         }
@@ -384,6 +387,7 @@ function addItemShiftClick() {
             }
         });
 
+        Page.invprototype().updateValues();
     });
 }
 
