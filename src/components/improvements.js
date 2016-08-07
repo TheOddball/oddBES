@@ -100,7 +100,7 @@ function global() {
         applyWallpaper();
     }
 
-    if (account.length) account.parent().after('<li><a href="/my/preferences"><i class="fa fa-fw fa-cog"></i> My Preferences</a></li>');
+    if (account.length) account.parent().after('<li><a href="/settings##bes"><i class="fa fa-fw fa-cog"></i> My Preferences</a></li>');
     if (notify.length) notify.parent().before('<li><a href="/lotto"><i class="fa fa-fw fa-money"></i> Lotto</a></li>');
     if (more.length) addMorePopovers(more);
 
