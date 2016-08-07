@@ -9,7 +9,7 @@
  * Changelog:
    https://github.com/caresx/backpacktf-enhancement-suite/blob/gh-pages/CHANGELOG.md
  *
- * Edit your preferences: http://backpack.tf/my/preferences##bes
+ * Edit your preferences: http://backpack.tf/settings##bes
  */
 
 var Prefs = require('./preferences'),

@@ -3,7 +3,7 @@
 // @name         Backpack.tf Enhancement Suite
 // @namespace    http://steamcommunity.com/id/theoddball
 // @author       The Oddball
-// @version      1.6.8.3
+// @version      1.6.8.4
 // @description  Enhances your backpack.tf experience.
 // @include      /^https?://.*\.?backpack\.tf/.*$/
 // @exclude      /^https?://forums\.backpack\.tf/.*$/
@@ -29,7 +29,7 @@
  * Changelog:
    https://github.com/caresx/backpacktf-enhancement-suite/blob/gh-pages/CHANGELOG.md
  *
- * Edit your preferences: http://backpack.tf/my/preferences##bes
+ * Edit your preferences: http://backpack.tf/settings##bes
  */
 
 var Prefs = require('./preferences'),
@@ -1019,7 +1019,7 @@ function global() {
         applyWallpaper();
     }
 
-    if (account.length) account.parent().after('<li><a href="/my/preferences"><i class="fa fa-fw fa-cog"></i> My Preferences</a></li>');
+    if (account.length) account.parent().after('<li><a href="/settings##bes"><i class="fa fa-fw fa-cog"></i> My Preferences</a></li>');
     if (notify.length) notify.parent().before('<li><a href="/lotto"><i class="fa fa-fw fa-money"></i> Lotto</a></li>');
     if (more.length) addMorePopovers(more);
 
@@ -1148,14 +1148,11 @@ var Prefs = require('../preferences'),
     Cache = require('../cache');
 
 function addTab() {
-    $("title").html("Enhancement Suite Settings");
-    $(".panel-heading").html('Enhancement Suite');
-    /* I don't know what this was supposed to do, so I'm commenting it until I
-     * figure it out.
+    $("#settings-tabs").append('<li><a href="#bes">Enhancement Suite</a></li>');
     $('#settings-tabs [href="#bes"]').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
-    }); */
+    });
 }
 
 function addTabContent() {
@@ -1385,7 +1382,7 @@ function addTabContent() {
         '</div>'
     ].join('');
 
-    $('.panel-body').html(html);
+    $('#settings-panes .tab-content').append(html);
     $('#modify-quicklists').click(Quicklist.modifyQuicklists);
     $('#clear-cache').click(clearCache);
     $('#reset-prefs').click(resetPrefs);
@@ -1490,14 +1487,14 @@ function addSaveButton() {
         saveButton.val('Saving...').addClass('disabled');
 
         Prefs.applyPrefs(getSettings());
-        $.post("/my/preferences_save", $("form[action='/my/preferences_save']").serialize(), function () {
+        $.post("/settings", $("form[action='/settings']").serialize(), function () {
             saveButton.val('Save Settings').removeClass('disabled');
         });
     });
 }
 
 function load() {
-    if (location.pathname !== '/my/preferences') return;
+    if (location.pathname !== '/settings') return;
 
     addTab();
     addTabContent();

@@ -7,14 +7,11 @@ var Prefs = require('../preferences'),
     Cache = require('../cache');
 
 function addTab() {
-    $("title").html("Enhancement Suite Settings");
-    $(".panel-heading").html('Enhancement Suite');
-    /* I don't know what this was supposed to do, so I'm commenting it until I
-     * figure it out.
+    $("#settings-tabs").append('<li><a href="#bes">Enhancement Suite</a></li>');
     $('#settings-tabs [href="#bes"]').click(function (e) {
         e.preventDefault();
         $(this).tab('show');
-    }); */
+    });
 }
 
 function addTabContent() {
@@ -244,7 +241,7 @@ function addTabContent() {
         '</div>'
     ].join('');
 
-    $('.panel-body').html(html);
+    $('#settings-panes .tab-content').append(html);
     $('#modify-quicklists').click(Quicklist.modifyQuicklists);
     $('#clear-cache').click(clearCache);
     $('#reset-prefs').click(resetPrefs);
@@ -349,14 +346,14 @@ function addSaveButton() {
         saveButton.val('Saving...').addClass('disabled');
 
         Prefs.applyPrefs(getSettings());
-        $.post("/my/preferences_save", $("form[action='/my/preferences_save']").serialize(), function () {
+        $.post("/settings", $("form[action='/settings']").serialize(), function () {
             saveButton.val('Save Settings').removeClass('disabled');
         });
     });
 }
 
 function load() {
-    if (location.pathname !== '/my/preferences') return;
+    if (location.pathname !== '/settings') return;
 
     addTab();
     addTabContent();
